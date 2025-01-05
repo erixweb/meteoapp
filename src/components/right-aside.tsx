@@ -1,8 +1,8 @@
-export default function RightAside() {
-    return (
-        <aside className=" text-white w-[40vw] min-h-[100vh] p-9 mt-0">
-            <h3 className="text-2xl font-bold">Results</h3>
-            <div></div>
-        </aside>
-    )
+export default function LeftAside() {
+	return (
+		<div className="w-full h-[100vh] p-9">
+			<h2>Right Aside</h2>
+			<p>This is the Right aside content.</p>
+		</div>
+	)
 }

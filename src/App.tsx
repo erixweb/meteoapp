@@ -5,7 +5,7 @@ import RightAside from "./components/right-aside"
 
 const App = () => {
 	return (
-		<main>
+		<main className="max-w-[1024px]">
 			<LeftAside />
 			<RightAside />
 		</main>
