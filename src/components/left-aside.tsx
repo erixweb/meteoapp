@@ -1,23 +1,110 @@
+import { useEffect, useState } from "react"
+import type { Weather } from "../types.d.ts"
+import weatherCodes from "../weather-codes.ts"
+import WeatherPreview from "./weather-preview.tsx"
+
+const OPEN_METEO_URL =
+	"https://api.open-meteo.com/v1/forecast?latitude=41.3888&longitude=2.159&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match"
+
+async function fetchWeatherData(): Promise<Weather> {
+	const response = await fetch(OPEN_METEO_URL)
+	const data = await response.json()
+	return data
+}
+
 export default function LeftAside() {
+	const [weather, setWeather] = useState<Weather | null>(null)
 	const date = new Date()
+	const currentHour = new Date().getHours()
+	const [hour, setHour] = useState(date.getHours() || 12)
+	const [weatherCode, setWeatherCode] = useState<string>("Solejat")
+	function updateHour(newHour: number) {
+		setHour(newHour)
+	}
+	console.log(hour)
+
+	useEffect(() => {
+		new Promise(async (resolve) => {
+			const data = await fetchWeatherData()
+
+			resolve(data)
+		}).then((data: Weather | unknown) => {
+			// @ts-ignore
+			setWeather(data)
+			if (data) {
+				setWeatherCode(
+					weatherCodes()[data?.hourly?.weather_code[hour]].day,
+				)
+			}
+		})
+	}, [])
+
 	return (
 		<div className="h-[100vh] mt-0 p-9 w-full">
-			<h2 className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text">Badalona</h2>
-			<time className="text-gray-300 italic">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</time>
+			<h2 className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text">
+				Badalona
+			</h2>
+			<time className="text-gray-300 italic">
+				{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
+			</time>
 
 			<div className="text-center w-full my-[40px]">
-				<img src="icons/day-clear.png" alt="" className="w-[144px] h-[144px]" />
+				<div className="relative ">
+					<img
+						src={`${weatherCode.image}`}
+						alt=""
+						className="w-[144px] h-[144px]"
+					/>
+					<img
+						src={`${weatherCode.image}`}
+						alt=""
+						className="w-[144px] h-[144px] absolute top-0 left-0 right-0 blur-2xl text-center"
+					/>
+				</div>
 
-				<data className="text-5xl">10<span className="text-gray-500">ºC</span></data>
+				<data className="text-5xl">
+					{weather?.hourly?.temperature_2m[hour] || 0}
+					<span className="text-gray-500">ºC</span>
+				</data>
 
-				<h4 className="text-gray-400 my-[20px] text-2xl font-normal">Despejado</h4>
+				<h4 className="text-gray-400 my-[20px] text-2xl font-normal">
+					{weatherCode.description}
+				</h4>
 
 				<div className="w-full bg-slate-800 rounded-[12px] flex p-4">
-					<div>Viento</div>
-					<hr className="border-[1.5px] border-gray-400 h-auto"/>
-					<div>Humedad</div>
-					<hr className="border-[1.5px] border-gray-400 h-auto"/>
-					<div>Lluvia</div>
+					<div className="flex flex-col">
+						<strong className="w-full text-start">Viento</strong>
+						<data className="w-full text-start">
+							{weather?.hourly?.wind_speed_10m[hour]}
+							<span className="text-gray-500">km/h</span>
+						</data>
+					</div>
+					<hr className="border-[1.5px] border-gray-400 h-auto" />
+					<div className="flex flex-col">
+						<strong className="w-full text-start">Humedad</strong>
+						<data className="w-full text-start">
+							{weather?.hourly?.relative_humidity_2m[hour]}
+							<span className="text-gray-500">%</span>
+						</data>
+					</div>
+					<hr className="border-[1.5px] border-gray-400 h-auto" />
+					<div className="flex flex-col">
+						<strong className="w-full text-start">Lluvia</strong>
+						<data className="w-full text-start">
+							{weather?.hourly?.precipitation[hour]}
+							<span className="text-gray-500">mm</span>
+						</data>
+					</div>
+				</div>
+				<div className="grid grid-cols-4 gap-[20px] my-[30px]">
+					{new Array(8).fill(0).map((_, i) => (
+						<WeatherPreview
+							data={weather}
+							hour={currentHour}
+							previewTime={i}
+							updateHour={updateHour}
+						/>
+					))}
 				</div>
 			</div>
 		</div>
