@@ -16,7 +16,7 @@ export default function LeftAside() {
 	const [weather, setWeather] = useState<Weather | null>(null)
 	const date = new Date()
 	const currentHour = new Date().getHours()
-	const [hour, setHour] = useState(date.getHours() || 12)
+	const [hour, setHour] = useState<number>(date.getHours() || 12)
 	const [weatherCode, setWeatherCode] = useState<string>("Solejat")
 	function updateHour(newHour: number) {
 		setHour(newHour)
@@ -39,6 +39,14 @@ export default function LeftAside() {
 		})
 	}, [])
 
+	useEffect(() => {
+		if (weather) {
+			setWeatherCode(
+				weatherCodes()[weather?.hourly?.weather_code[hour]].day,
+			)
+		}
+	}, [hour])
+
 	return (
 		<div className="h-[100vh] mt-0 p-9 w-full">
 			<h2 className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text">
@@ -58,7 +66,7 @@ export default function LeftAside() {
 					<img
 						src={`${weatherCode.image}`}
 						alt=""
-						className="w-[144px] h-[144px] absolute top-0 left-0 right-0 blur-2xl text-center"
+						className="w-[144px] h-[144px] absolute top-0 left-0 right-0 blur-2xl text-center scale-110"
 					/>
 				</div>
 

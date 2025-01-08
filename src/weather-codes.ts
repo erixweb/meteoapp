@@ -2,42 +2,42 @@ export default function weatherCodes(): any {
 	return {
 		"0": {
 			day: {
-				description: "Solejat",
+				description: "Despejado",
 				image: "/icons/day-clear.png",
 			},
 			night: {
-				description: "Aclarit",
-				image: "/icons/noght-clear.png",
+				description: "Despejado",
+				image: "/icons/night-clear.png",
 			},
 		},
 		"1": {
 			day: {
-				description: "Principalment solejat",
+				description: "Principalmente despejado",
 				image: "/icons/day-clear.png",
 			},
 			night: {
-				description: "Principalmente aclarit",
+				description: "Principalmente despejado",
 				image: "/icons/night-clear.png",
 			},
 		},
 		"2": {
 			day: {
-				description: "Parcialment nuvolat",
-				image: "/partiallycloudy.webp",
+				description: "Parcialmente nublado",
+				image: "/icons/day-partly-cloudy.png",
 			},
 			night: {
-				description: "Parcialment nuvolat",
-				image: "/partiallycloudymoon.webp",
+				description: "Parcialmente nublado",
+				image: "/icons/night-partly-cloudy.png",
 			},
 		},
 		"3": {
 			day: {
-				description: "Nuvolat",
-				image: "/icons/nuvolat.svg",
+				description: "Nublado",
+				image: "/icons/cloudy.png",
 			},
 			night: {
-				description: "Nuvolat",
-				image: "/icons/nuvolat.svg",
+				description: "Nublado",
+				image: "/icons/cloudy.png",
 			},
 		},
 		"45": {
