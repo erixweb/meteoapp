@@ -6,38 +6,19 @@ import WeatherPreview from "./weather-preview.tsx"
 const OPEN_METEO_URL =
 	"https://api.open-meteo.com/v1/forecast?latitude=41.3888&longitude=2.159&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match"
 
-async function fetchWeatherData(): Promise<Weather> {
-	const response = await fetch(OPEN_METEO_URL)
-	const data = await response.json()
-	return data
-}
-
-export default function LeftAside() {
-	const [weather, setWeather] = useState<Weather | null>(null)
+export default function LeftAside({
+	weather,
+	updateHour,
+	hour,
+	currentHour
+}: {
+	weather: any
+	updateHour: Function,
+	hour: number,
+	currentHour: number
+}) {
 	const date = new Date()
-	const currentHour = new Date().getHours()
-	const [hour, setHour] = useState<number>(date.getHours() || 12)
 	const [weatherCode, setWeatherCode] = useState<string>("Solejat")
-	function updateHour(newHour: number) {
-		setHour(newHour)
-	}
-	console.log(hour)
-
-	useEffect(() => {
-		new Promise(async (resolve) => {
-			const data = await fetchWeatherData()
-
-			resolve(data)
-		}).then((data: Weather | unknown) => {
-			// @ts-ignore
-			setWeather(data)
-			if (data) {
-				setWeatherCode(
-					weatherCodes()[data?.hourly?.weather_code[hour]].day,
-				)
-			}
-		})
-	}, [])
 
 	useEffect(() => {
 		if (weather) {
@@ -45,10 +26,10 @@ export default function LeftAside() {
 				weatherCodes()[weather?.hourly?.weather_code[hour]].day,
 			)
 		}
-	}, [hour])
+	}, [hour, weather])
 
 	return (
-		<div className="h-[100vh] mt-0 p-9 w-full">
+		<div className="min-h-[100vh] mt-0 p-9 w-full">
 			<h2 className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text">
 				Badalona
 			</h2>
@@ -105,7 +86,7 @@ export default function LeftAside() {
 					</div>
 				</div>
 				<div className="grid grid-cols-4 gap-[20px] my-[30px]">
-					{new Array(8).fill(0).map((_, i) => (
+					{new Array(24 - currentHour).fill(0).map((_, i) => (
 						<WeatherPreview
 							data={weather}
 							hour={currentHour}
