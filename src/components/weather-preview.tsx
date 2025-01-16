@@ -11,7 +11,7 @@ export default function WeatherPreview({
 	data: Weather | null
 	hour: number
 	previewTime: number
-	updateHour: Function
+	updateHour: Function,
 }) {
 
 	return data ? (

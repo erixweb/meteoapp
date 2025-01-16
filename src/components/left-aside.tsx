@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react"
-import type { Weather } from "../types.d.ts"
+import type { WeatherCodes } from "../types.d.ts"
 import weatherCodes from "../weather-codes.ts"
 import WeatherPreview from "./weather-preview.tsx"
 
-const OPEN_METEO_URL =
-	"https://api.open-meteo.com/v1/forecast?latitude=41.3888&longitude=2.159&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match"
 
 export default function LeftAside({
 	weather,
 	updateHour,
 	hour,
-	currentHour
+	currentHour,
+	currentDay
 }: {
 	weather: any
 	updateHour: Function,
 	hour: number,
-	currentHour: number
+	currentHour: number,
+	currentDay: number
 }) {
 	const date = new Date()
-	const [weatherCode, setWeatherCode] = useState<string>("Solejat")
+	const [weatherCode, setWeatherCode] = useState<WeatherCodes|null>(null)
 
 	useEffect(() => {
 		if (weather) {
@@ -26,7 +26,8 @@ export default function LeftAside({
 				weatherCodes()[weather?.hourly?.weather_code[hour]].day,
 			)
 		}
-	}, [hour, weather])
+		console.log(currentDay * 24, currentHour)
+	}, [hour, weather, currentDay, currentHour])
 
 	return (
 		<div className="min-h-[100vh] mt-0 p-9 w-full">
@@ -40,12 +41,12 @@ export default function LeftAside({
 			<div className="text-center w-full my-[40px]">
 				<div className="relative ">
 					<img
-						src={`${weatherCode.image}`}
+						src={`${weatherCode?.image}`}
 						alt=""
 						className="w-[144px] h-[144px]"
 					/>
 					<img
-						src={`${weatherCode.image}`}
+						src={`${weatherCode?.image}`}
 						alt=""
 						className="w-[144px] h-[144px] absolute top-0 left-0 right-0 blur-2xl text-center scale-110"
 					/>
@@ -57,7 +58,7 @@ export default function LeftAside({
 				</data>
 
 				<h4 className="text-gray-400 my-[20px] text-2xl font-normal">
-					{weatherCode.description}
+					{weatherCode?.description}
 				</h4>
 
 				<div className="w-full bg-slate-800 rounded-[12px] flex p-4">
@@ -86,7 +87,7 @@ export default function LeftAside({
 					</div>
 				</div>
 				<div className="grid grid-cols-4 gap-[20px] my-[30px]">
-					{new Array(24 - currentHour).fill(0).map((_, i) => (
+					{new Array(currentDay * 24 - currentHour).fill(0).map((_, i) => (
 						<WeatherPreview
 							data={weather}
 							hour={currentHour}

@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import WeatherPreview from "./weather-preview"
 
 export default function LeftAside({
 	weather,
@@ -14,7 +13,7 @@ export default function LeftAside({
 }) {
 	const day = new Date().getDate()
 	useEffect(() => {
-		console.log(hour, currentHour)
+		// console.log(hour, currentHour)
 	}, [hour, currentHour])
 
 	return (
@@ -25,8 +24,8 @@ export default function LeftAside({
 				<div className="flex gap-5 my-[20px]">
 					{new Array(5).fill(0).map((_, i) => (
 						<button
+						onClick={() => updateHour(0, i + 1)}
 							className="w-full p-6 bg-gray-800 rounded-2xl border-2 border-gray-500"
-							onClick={() => updateHour((24 - currentHour) - (24-currentHour) + 24 * (i + 1))}
 						>
 							{day + i}
 						</button>

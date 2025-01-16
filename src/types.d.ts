@@ -31,3 +31,8 @@ export interface HourlyUnits {
     wind_speed_10m:       string;
     wind_direction_10m:   string;
 }
+
+export interface WeatherCodes {
+        description: string;
+        image: string;
+}

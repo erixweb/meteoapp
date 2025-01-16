@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./App.css"
 import LeftAside from "./components/left-aside"
 import RightAside from "./components/right-aside"
 import { Weather } from "./types"
-
 
 const OPEN_METEO_URL =
 	"https://api.open-meteo.com/v1/forecast?latitude=41.3888&longitude=2.159&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match"
@@ -14,16 +13,30 @@ async function fetchWeatherData(): Promise<Weather> {
 	return data
 }
 
-
 const App = () => {
 	const date = new Date()
 	const [weather, setWeather] = useState<Weather | null>(null)
 	const [hour, setHour] = useState<number>(date.getHours() || 12)
-	const currentHour = new Date().getHours()
+	const [currentHour, setCurrentHour] = useState(new Date().getHours())
+	const [currentDay, setCurrentDay] = useState(1)
+	
 
-	function changeHour(newHour: number) {
+	function changeHour(
+		newHour: number,
+		newCurrentDay: number = 1,
+	) {
+		setCurrentDay(newCurrentDay)
+		setCurrentHour(new Date().getHours())
+		
+		if (newCurrentDay !== 1) {
+			setHour(newCurrentDay * 24)
+			setCurrentHour(newCurrentDay * 24 - 24)
+			
+			return
+		}
 		setHour(newHour)
 	}
+
 	useEffect(() => {
 		new Promise(async (resolve) => {
 			const data = await fetchWeatherData()
@@ -37,8 +50,19 @@ const App = () => {
 
 	return (
 		<main className="max-w-[1024px]">
-			<LeftAside weather={weather} updateHour={changeHour} hour={hour} currentHour={currentHour} />
-			<RightAside weather={weather} updateHour={changeHour} hour={hour} currentHour={currentHour} />
+			<LeftAside
+				weather={weather}
+				updateHour={changeHour}
+				hour={hour}
+				currentHour={currentHour}
+				currentDay={currentDay}
+			/>
+			<RightAside
+				weather={weather}
+				updateHour={changeHour}
+				hour={hour}
+				currentHour={currentHour}
+			/>
 		</main>
 	)
 }
