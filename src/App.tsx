@@ -19,22 +19,29 @@ const App = () => {
 	const [hour, setHour] = useState<number>(date.getHours() || 12)
 	const [currentHour, setCurrentHour] = useState(new Date().getHours())
 	const [currentDay, setCurrentDay] = useState(1)
-	
 
-	function changeHour(
-		newHour: number,
-		newCurrentDay: number = 1,
-	) {
-		setCurrentDay(newCurrentDay)
-		setCurrentHour(new Date().getHours())
-		
-		if (newCurrentDay !== 1) {
+	function changeHour(newHour: number, newCurrentDay: number = 1) {
+		console.log(newHour, newCurrentDay)
+		if (newCurrentDay === 1) {
+			// setHour(newHour)
+			setCurrentDay(1)
+			setCurrentHour(newHour)
+			setHour(newHour)
+
+			return
+		}
+		if (newCurrentDay !== 1 && newHour === 0) {
+			setCurrentDay(newCurrentDay)
+			
 			setHour(newCurrentDay * 24)
 			setCurrentHour(newCurrentDay * 24 - 24)
 			
 			return
-		}
+		} 
+		// setCurrentHour(new Date().getHours())
 		setHour(newHour)
+		setCurrentDay(newCurrentDay)
+
 	}
 
 	useEffect(() => {

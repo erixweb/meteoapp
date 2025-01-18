@@ -42,8 +42,8 @@ export default function weatherCodes(): any {
 		},
 		"45": {
 			day: {
-				description: "Boirós",
-				image: "/icons/boira.svg",
+				description: "Neblinoso",
+				image: "/icons/day-fog.png",
 			},
 			night: {
 				description: "Boirós",

@@ -26,7 +26,7 @@ export default function LeftAside({
 				weatherCodes()[weather?.hourly?.weather_code[hour]].day,
 			)
 		}
-		console.log(currentDay * 24, currentHour)
+		// console.log(currentDay * 24, currentHour)
 	}, [hour, weather, currentDay, currentHour])
 
 	return (
@@ -93,6 +93,7 @@ export default function LeftAside({
 							hour={currentHour}
 							previewTime={i}
 							updateHour={updateHour}
+							currentDay={currentDay}
 						/>
 					))}
 				</div>
