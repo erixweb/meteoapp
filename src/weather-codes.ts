@@ -63,11 +63,11 @@ export default function weatherCodes(): any {
 		"51": {
 			day: {
 				description: "Plugim lleuger",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle.png",
 			},
 			night: {
 				description: "Plugin lleuger",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle.png",
 			},
 		},
 		"53": {
@@ -113,11 +113,11 @@ export default function weatherCodes(): any {
 		"61": {
 			day: {
 				description: "Pluja lleugera",
-				image: "/icons/pluja.svg",
+				image: "/icons/drizzle.png",
 			},
 			night: {
 				description: "Pluja lleugera",
-				image: "/icons/pluja.svg",
+				image: "/icons/drizzle.png",
 			},
 		},
 		"63": {
