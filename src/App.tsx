@@ -25,8 +25,8 @@ const App = () => {
 		if (newCurrentDay === 1) {
 			// setHour(newHour)
 			setCurrentDay(1)
-			setCurrentHour(newHour)
-			setHour(newHour)
+			setCurrentHour(new Date().getHours())
+			setHour(new Date().getHours())
 
 			return
 		}
