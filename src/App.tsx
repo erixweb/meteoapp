@@ -32,16 +32,15 @@ const App = () => {
 		}
 		if (newCurrentDay !== 1 && newHour === 0) {
 			setCurrentDay(newCurrentDay)
-			
+
 			setHour(newCurrentDay * 24)
 			setCurrentHour(newCurrentDay * 24 - 24)
-			
+
 			return
-		} 
+		}
 		// setCurrentHour(new Date().getHours())
 		setHour(newHour)
 		setCurrentDay(newCurrentDay)
-
 	}
 
 	useEffect(() => {

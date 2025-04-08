@@ -8,12 +8,12 @@ export default function WeatherPreview({
 	hour,
 	previewTime,
 	updateHour,
-	currentDay
+	currentDay,
 }: {
 	data: Weather | null
 	hour: number
 	previewTime: number
-	updateHour: Function,
+	updateHour: Function
 	currentDay: number
 }) {
 	return data ? (
@@ -21,13 +21,17 @@ export default function WeatherPreview({
 			onClick={() => updateHour(hour + previewTime, currentDay)}
 			className="p-4 bg-gray-700 rounded-xl border-2 border-gray-400"
 		>
-			<span className="text-gray-400">{formatHour(hour + previewTime)}</span>
+			<span className="text-gray-400">
+				{formatHour(hour + previewTime)}
+			</span>
 			<img
 				src={`${weatherCodes()[data.hourly.weather_code[hour + previewTime]].day.image}`}
 				alt=""
 				className="w-[48px] h-[48px]"
-			/>  
-            <data value={data.hourly.temperature_2m[hour + previewTime]}>{data.hourly.temperature_2m[hour + previewTime]}ºC</data>
+			/>
+			<data value={data.hourly.temperature_2m[hour + previewTime]}>
+				{data.hourly.temperature_2m[hour + previewTime]}ºC
+			</data>
 		</button>
 	) : null
 }

@@ -3,22 +3,21 @@ import type { WeatherCodes } from "../types.d.ts"
 import weatherCodes from "../weather-codes.ts"
 import WeatherPreview from "./weather-preview.tsx"
 
-
 export default function LeftAside({
 	weather,
 	updateHour,
 	hour,
 	currentHour,
-	currentDay
+	currentDay,
 }: {
 	weather: any
-	updateHour: Function,
-	hour: number,
-	currentHour: number,
+	updateHour: Function
+	hour: number
+	currentHour: number
 	currentDay: number
 }) {
 	const date = new Date()
-	const [weatherCode, setWeatherCode] = useState<WeatherCodes|null>(null)
+	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
 
 	useEffect(() => {
 		if (weather) {
@@ -87,15 +86,17 @@ export default function LeftAside({
 					</div>
 				</div>
 				<div className="grid grid-cols-4 gap-[20px] my-[30px]">
-					{new Array(currentDay * 24 - currentHour).fill(0).map((_, i) => (
-						<WeatherPreview
-							data={weather}
-							hour={currentHour}
-							previewTime={i}
-							updateHour={updateHour}
-							currentDay={currentDay}
-						/>
-					))}
+					{new Array(currentDay * 24 - currentHour)
+						.fill(0)
+						.map((_, i) => (
+							<WeatherPreview
+								data={weather}
+								hour={currentHour}
+								previewTime={i}
+								updateHour={updateHour}
+								currentDay={currentDay}
+							/>
+						))}
 				</div>
 			</div>
 		</div>

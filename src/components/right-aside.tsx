@@ -24,7 +24,7 @@ export default function LeftAside({
 				<div className="flex gap-5 my-[20px]">
 					{new Array(5).fill(0).map((_, i) => (
 						<button
-						onClick={() => updateHour(0, i + 1)}
+							onClick={() => updateHour(0, i + 1)}
 							className="w-full p-6 bg-gray-800 rounded-2xl border-2 border-gray-500"
 						>
 							{day + i}
