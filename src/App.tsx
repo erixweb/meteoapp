@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import LeftAside from "./components/left-aside"
 import RightAside from "./components/right-aside"
@@ -26,7 +26,7 @@ const App = () => {
 			// setHour(newHour)
 			setCurrentDay(1)
 			setCurrentHour(new Date().getHours())
-			setHour(new Date().getHours())
+			setHour(newHour)
 
 			return
 		}
