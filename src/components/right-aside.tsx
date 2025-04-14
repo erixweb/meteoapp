@@ -17,9 +17,7 @@ export default function LeftAside({
 	}, [hour, currentHour])
 
 	return (
-		<div className="w-full min-h-[100vh] p-9 mt-0">
-			<h2>Right Aside</h2>
-			<p>This is the Right aside content.</p>
+		<div className="w-full py-[15px]">
 			{weather && currentHour ? (
 				<div className="flex gap-5 my-[20px]">
 					{new Array(5).fill(0).map((_, i) => (

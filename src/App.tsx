@@ -56,18 +56,18 @@ const App = () => {
 
 	return (
 		<main className="max-w-[1024px]">
+			<RightAside
+				weather={weather}
+				updateHour={changeHour}
+				hour={hour}
+				currentHour={currentHour}
+			/>
 			<LeftAside
 				weather={weather}
 				updateHour={changeHour}
 				hour={hour}
 				currentHour={currentHour}
 				currentDay={currentDay}
-			/>
-			<RightAside
-				weather={weather}
-				updateHour={changeHour}
-				hour={hour}
-				currentHour={currentHour}
 			/>
 		</main>
 	)

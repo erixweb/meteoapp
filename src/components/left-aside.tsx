@@ -56,7 +56,7 @@ export default function LeftAside({
 					<span className="text-gray-500">ºC</span>
 				</data>
 
-				<h4 className="text-gray-400 my-[20px] text-2xl font-normal">
+				<h4 className="text-gray-400 my-[20px] text-2xl font-normal py-5">
 					{weatherCode?.description}
 				</h4>
 
@@ -85,7 +85,7 @@ export default function LeftAside({
 						</data>
 					</div>
 				</div>
-				<div className="grid grid-cols-4 gap-[20px] my-[30px]">
+				<div className="flex flex-row gap-[15px] py-[30px] overflow-x-scroll w-full">
 					{new Array(currentDay * 24 - currentHour)
 						.fill(0)
 						.map((_, i) => (

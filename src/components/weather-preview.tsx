@@ -19,7 +19,7 @@ export default function WeatherPreview({
 	return data ? (
 		<button
 			onClick={() => updateHour(hour + previewTime, currentDay)}
-			className="p-4 bg-gray-700 rounded-xl border-2 border-gray-400"
+			className="p-4 cursor-pointer bg-gray-700 rounded-xl border-2 border-gray-400 w-full"
 		>
 			<span className="text-gray-400">
 				{formatHour(hour + previewTime)}
