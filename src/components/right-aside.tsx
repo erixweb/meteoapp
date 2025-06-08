@@ -17,7 +17,7 @@ export default function LeftAside({
 	}, [hour, currentHour])
 
 	return (
-		<div className="w-full py-[15px]">
+		<div className="w-full py-[15px] px-9">
 			{weather && currentHour ? (
 				<div className="flex gap-5 my-[20px]">
 					{new Array(5).fill(0).map((_, i) => (

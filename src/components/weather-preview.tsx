@@ -27,7 +27,7 @@ export default function WeatherPreview({
 			<img
 				src={`${weatherCodes()[data.hourly.weather_code[hour + previewTime]].day.image}`}
 				alt=""
-				className="w-[48px] h-[48px]"
+				className="w-[48px] h-[48px] m-auto"
 			/>
 			<data value={data.hourly.temperature_2m[hour + previewTime]}>
 				{data.hourly.temperature_2m[hour + previewTime]}ºC

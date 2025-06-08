@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 
 * {
-	margin: auto;
-	padding: auto;
 	box-sizing: border-box;
 }
 body {
@@ -31,4 +29,21 @@ main {
 	align-items: center;
 	width: 100%;
 	min-height: 100vh;
+}
+
+
+.stats-box *{
+	padding: auto;
+	margin: auto;
+}
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+option::checkmark {
+  order: 1;
+  margin-left: auto;
+  content: "☑️";
 }
