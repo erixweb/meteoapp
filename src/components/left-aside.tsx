@@ -3,6 +3,7 @@ import type { WeatherCodes } from "../types.d.ts"
 import weatherCodes from "../weather-codes.ts"
 import WeatherPreview from "./weather-preview.tsx"
 import Option from "./ui/option.tsx"
+import ArrowDown from "./icons/arrow-down.tsx"
 
 export default function LeftAside({
 	weather,
@@ -11,7 +12,6 @@ export default function LeftAside({
 	hour,
 	currentHour,
 	currentDay,
-
 }: {
 	weather: any
 	updateHour: Function
@@ -34,15 +34,27 @@ export default function LeftAside({
 	return (
 		<div className="min-h-[100vh] mt-0 p-9 w-full">
 			<div className="flex flex-col w-fit text-start ml-0">
-				<select className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text text-start w-fit ml-0 border-none outline-none">
-					<Option value="BADALONA" onChange={() => updateCity("Badalona")}>
-						Badalona
-					</Option>
-					<Option value="CARMONA" onChange={() => updateCity("Carmona")}>
-						Carmona
-					</Option>
-				</select>
-				<time className="text-gray-300 italic ml-0 w-full text-start">
+				<div className="bg-gray-800 p-4 rounded-xl border-2 border-gray-500 flex items-center justify-center">
+					<select
+						className="text-4xl font-bold text-transparent bg-gradient-to-b from-gray-200 to-gray-400 bg-clip-text text-start w-fit ml-0 outline-none "
+						id="city"
+					>
+						<Option
+							value="BADALONA"
+							onChange={() => updateCity("Badalona")}
+						>
+							Badalona
+						</Option>
+						<Option
+							value="CARMONA"
+							onChange={() => updateCity("Carmona")}
+						>
+							Carmona
+						</Option>
+					</select>
+					<span className="text-4xl w-fit align-middle text-blue-400"><ArrowDown /></span>
+				</div>
+				<time className="text-gray-300 italic ml-0 mt-4 w-full text-start">
 					{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}
 				</time>
 			</div>

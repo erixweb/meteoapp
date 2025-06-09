@@ -12,7 +12,7 @@ export default function Option({
     return (
         <option
             value={value}
-            className={`text-xl bg-gray-700 text-white border-2 border-gray-500 outline-none hover:bg-gray-400 focus:bg-gray-400 checked:font-bold ${
+            className={`text-xl bg-gray-700 text-white border-2 border-gray-500 outline-none hover:bg-gray-400 focus:bg-gray-400 checked:font-bold p-2 ${
                 selected ? "bg-gray-800" : ""
             }`}
             onClick={() => onChange && onChange(value)}
