@@ -36,3 +36,4 @@ export interface WeatherCodes {
 	description: string
 	image: string
 }
+

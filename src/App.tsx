@@ -1,107 +1,171 @@
 import { useEffect, useState } from "react"
 import "./App.css"
-import LeftAside from "./components/left-aside"
-import RightAside from "./components/right-aside"
-import { Weather } from "./types"
+import { DropletIcon } from "./components/icons/droplet-icon"
+import { UmbrellaIcon } from "./components/icons/umbrella-icon"
+import { WindIcon } from "./components/icons/wind-icon"
+import { Weather, WeatherCodes } from "./types"
+import weatherCodes from "./weather-codes"
+import { handleWheelScroll } from "./forecast-scroll.ts"
 
-type City = {
-	[objectName: string]: {
-		lat: number
-		lon: number
-	}
+function request_weather() {
+	const API_ENDPOINT =
+		"https://api.open-meteo.com/v1/forecast?latitude=37.4712&longitude=-5.6461&hourly=temperature_2m,weather_code,relative_humidity_2m,precipitation,wind_speed_10m,apparent_temperature"
+
+	return fetch(API_ENDPOINT)
 }
 
-const CITIES: City = {
-	Badalona: {
-		lat: 41.3888,
-		lon: 2.159,
-	},
-	Carmona: {
-		lat: 37.4712,
-		lon: -5.6461,
-	},
-}
+export function App() {
+	const [weatherData, setWeatherData] = useState<Weather | null>(null)
+	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
+	const currentHour = new Date().getHours()
 
-const OPEN_METEO_URL =
-	"https://api.open-meteo.com/v1/forecast?latitude=41.3888&longitude=2.159&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match"
+	useEffect(() => {
+		request_weather()
+			.then((response) => {
+				response.json().then((data) => {
+					setWeatherData(data)
+				})
+			})
+			.catch((error) => {
+				console.error("Error fetching weather data:", error)
+			})
 
-async function fetchWeatherData(url: string): Promise<Weather> {
-	const response = await fetch(url)
-	const data = await response.json()
-	return data
-}
+		// Wait for DOM to be ready before attaching event listener
+	}, [])
 
-const App = () => {
-	const date = new Date()
-	const [weather, setWeather] = useState<Weather | null>(null)
-	const [hour, setHour] = useState<number>(date.getHours() || 12)
-	const [currentHour, setCurrentHour] = useState(new Date().getHours())
-	const [currentDay, setCurrentDay] = useState(1)
 
-	async function updateCity(newCity: string) {
-		if (!CITIES[newCity]) {
-			throw new Error("City not found")
-		}
-		const { lat, lon } = CITIES[newCity]
-		const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m&models=best_match`
-		const response = await fetch(url)
-		const data = await response.json()
+	const forecast = document.querySelector(".forecast")
 
-		setWeather(data)
-		return data
-	}
-
-	function changeHour(newHour: number, newCurrentDay: number = 1) {
-		if (newCurrentDay === 1) {
-			// setHour(newHour)
-			setCurrentDay(1)
-			setCurrentHour(new Date().getHours())
-			setHour(newHour)
-
-			return
-		}
-		if (newCurrentDay !== 1 && newHour === 0) {
-			setCurrentDay(newCurrentDay)
-
-			setHour(newCurrentDay * 24)
-			setCurrentHour(newCurrentDay * 24 - 24)
-
-			return
-		}
-		// setCurrentHour(new Date().getHours())
-		setHour(newHour)
-		setCurrentDay(newCurrentDay)
+	if (forecast) {
+		forecast.addEventListener("wheel", handleWheelScroll)
 	}
 
 	useEffect(() => {
-		new Promise(async (resolve) => {
-			const data = await fetchWeatherData(OPEN_METEO_URL)
-
-			resolve(data)
-		}).then((data: Weather | unknown) => {
-			// @ts-ignore
-			setWeather(data)
-		})
-	}, [])
+		if (weatherData !== null && weatherData !== undefined) {
+			setWeatherCode(
+				weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
+			)
+			console.log(weatherCode)
+		}
+	}, [weatherData])
 
 	return (
-		<main className="max-w-[1024px] m-auto">
-			<RightAside
-				weather={weather}
-				updateHour={changeHour}
-				hour={hour}
-				currentHour={currentHour}
-			/>
-			<LeftAside
-				weather={weather}
-				updateHour={changeHour}
-				updateCity={updateCity}
-				hour={hour}
-				currentHour={currentHour}
-				currentDay={currentDay}
-			/>
+		<main className="from-blue-200 to-blue-700 bg-gradient-to-b">
+			<div className="header glass p-5">
+				<div className="m-auto w-full text-center py-4">
+					<h3 className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b">
+						Carmona
+					</h3>
+				</div>
+				<div className="text-center flex items-center justify-center w-full">
+					<h2 className="text-9xl w-full relative font-bold from-purple-500 to-purple-700 text-transparent bg-clip-text bg-gradient-to-b">
+						{weatherData?.hourly?.temperature_2m[currentHour]}º
+						<img
+							src={weatherCode?.image}
+							alt="Weather image"
+							className="w-[120px] h-[120px] absolute top-14 left-[60%] m-auto"
+						/>
+						<img
+							src={weatherCode?.image}
+							alt="Weather image"
+							className="w-[120px] h-[120px] absolute top-14 left-[60%] m-auto blur-3xl"
+						/>
+					</h2>
+				</div>
+				<div className="m-auto glass w-full max-w-[600px] p-4 mt-[70px] rounded-full flex text-purple-700">
+					<div className="text-center w-full">
+						<UmbrellaIcon />
+						<p>
+							{weatherData?.hourly?.precipitation[currentHour]}mm
+						</p>
+					</div>
+					<div className="text-center w-full">
+						<DropletIcon />
+						<p>
+							{
+								weatherData?.hourly?.relative_humidity_2m[
+									currentHour
+								]
+							}
+							%
+						</p>
+					</div>
+					<div className="text-center w-full">
+						<WindIcon />
+						<p>
+							{weatherData?.hourly?.wind_speed_10m[currentHour]}
+							km/h
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<section className="w-full m-auto container p-5">
+				<h2 className="text-xl font-bold py-2 text-white">
+					Today's forecast
+				</h2>
+
+				<div>
+					{weatherData ? (
+						<div className="flex  gap-4 overflow-x-scroll forecast ">
+							{weatherData.hourly.time
+								.slice(0, 24)
+								.map((time, index) => (
+									<div
+										key={index}
+										className="glass p-4 rounded-[16px] shadow-md min-w-26 w-full"
+									>
+										<h3 className="text-lg font-semibold">
+											{new Date(time).toLocaleTimeString(
+												[],
+												{
+													hour: "2-digit",
+													minute: "2-digit",
+												},
+											)}
+										</h3>
+										<p className="flex items-center justify-center py-2">
+											<img
+												src={
+													weatherCodes()[
+														weatherData?.hourly
+															?.weather_code[
+															index
+														]
+													].day.image
+												}
+												className="w-16 h-16"
+											></img>
+										</p>
+										<p className="text-center text-xl text-indigo-800 font-bold">
+											{
+												weatherData.hourly
+													.temperature_2m[index]
+											}
+											ºC
+										</p>
+										<p className="text-center">
+											{
+												weatherData.hourly
+													.relative_humidity_2m[index]
+											}
+											%
+										</p>
+										<p className="text-center">
+											{
+												weatherData.hourly
+													.wind_speed_10m[index]
+											}{" "}
+											km/h
+										</p>
+									</div>
+								))}
+						</div>
+					) : (
+						<p>Loading forecast data...</p>
+					)}
+				</div>
+			</section>
 		</main>
 	)
 }
-
-export default App

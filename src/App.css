@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 * {
 	box-sizing: border-box;
@@ -6,7 +6,7 @@
 body {
 	width: 100%;
 	min-height: 100vh;
-	color: #fff;
+	color: #000;
 	font-family:
 		system-ui,
 		-apple-system,
@@ -19,31 +19,46 @@ body {
 		"Open Sans",
 		"Helvetica Neue",
 		sans-serif;
-	background-image: linear-gradient(to bottom, #020917, #101725);
 }
 
 main {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 	width: 100%;
 	min-height: 100vh;
+	margin-top: 0px;
+
+	.header {
+		margin-top: 0px;
+		width: 100%;
+		height: 500px;
+		max-height: 80vh;
+		border-bottom-right-radius: 16px;
+		border-bottom-left-radius: 16px;
+	}
+
+	.glass {
+		background: rgba(255, 255, 255, 0.7);
+		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+		backdrop-filter: blur(20px);
+		
+		-webkit-backdrop-filter: blur(20px);
+		position: relative;
+		z-index: 1;
+	}
+
 }
 
-
-.stats-box *{
+.stats-box * {
 	padding: auto;
 	margin: auto;
 }
 
 select,
 ::picker(select) {
-  appearance: base-select;
+	appearance: base-select;
 }
 
 option::checkmark {
-  order: 1;
-  margin-left: auto;
-  content: "☑️";
+	order: 1;
+	margin-left: auto;
+	content: "☑️";
 }
