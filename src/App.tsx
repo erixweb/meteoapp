@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import "./App.css"
-import { DropletIcon } from "./components/icons/droplet-icon"
-import { UmbrellaIcon } from "./components/icons/umbrella-icon"
-import { WindIcon } from "./components/icons/wind-icon"
+import { DropletIcon } from "./components/icons/droplet-icon.tsx"
+import { UmbrellaIcon } from "./components/icons/umbrella-icon.tsx"
+import { WindIcon } from "./components/icons/wind-icon.tsx"
 import { Weather, WeatherCodes } from "./types"
-import weatherCodes from "./weather-codes"
+import weatherCodes from "./weather-codes.ts"
 import { handleWheelScroll } from "./forecast-scroll.ts"
 
 function request_weather() {
@@ -33,10 +33,10 @@ export function App() {
 		// Wait for DOM to be ready before attaching event listener
 	}, [])
 
-
 	const forecast = document.querySelector(".forecast")
 
 	if (forecast) {
+		// @ts-ignore
 		forecast.addEventListener("wheel", handleWheelScroll)
 	}
 
