@@ -16,4 +16,7 @@ export default defineConfig({
 		// Enable production-specific performance optimizations
 		removeConsole: true, // Remove console.log statements
 	},
+	html: {
+		template: "./src/index.html",
+	},
 })

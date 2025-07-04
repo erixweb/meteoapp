@@ -21,6 +21,18 @@ const CITIES: Record<string, City> = {
 		latitude: 41.6436707,
 		longitude: 2.7426636,
 	},
+	badalona: {
+		latitude: 41.438196,
+		longitude: 2.2266047,
+	},
+	barcelona: {
+		latitude: 41.3851,
+		longitude: 2.1734,
+	},
+	sevilla: {
+		latitude: 37.3886,
+		longitude: -5.9823,
+	},
 }
 type ForecastDay = "TODAY" | "TOMORROW"
 
@@ -94,8 +106,11 @@ export function App() {
 							setCity(selectedCity)
 						}}
 					>
-						<option value="carmona">Carmona</option>
+						<option value="barcelona">Barcelona</option>
 						<option value="malgrat">Malgrat de Mar</option>
+						<option value="badalona">Badalona</option>
+						<option value="sevilla">Sevilla</option>
+						<option value="carmona">Carmona</option>
 					</select>
 				</div>
 				<div className="text-center flex items-center justify-center w-full">
@@ -169,13 +184,12 @@ export function App() {
 											className="glass p-4 rounded-[16px] shadow-md min-w-26 w-full"
 										>
 											<h3 className="text-lg font-semibold text-center">
-												{new Date(time).toLocaleTimeString(
-													[],
-													{
-														hour: "2-digit",
-														minute: "2-digit",
-													},
-												)}
+												{new Date(
+													time,
+												).toLocaleTimeString([], {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
 											</h3>
 											<p className="flex items-center justify-center py-2">
 												<img
@@ -193,21 +207,27 @@ export function App() {
 											<p className="text-center text-xl text-indigo-800 font-bold">
 												{
 													weatherData.hourly
-														.temperature_2m[realIndex]
+														.temperature_2m[
+														realIndex
+													]
 												}
 												ºC
 											</p>
 											<p className="text-center">
 												{
 													weatherData.hourly
-														.relative_humidity_2m[realIndex]
+														.relative_humidity_2m[
+														realIndex
+													]
 												}
 												%
 											</p>
 											<p className="text-center">
 												{
 													weatherData.hourly
-														.wind_speed_10m[realIndex]
+														.wind_speed_10m[
+														realIndex
+													]
 												}{" "}
 												km/h
 											</p>
