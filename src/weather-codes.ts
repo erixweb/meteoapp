@@ -63,111 +63,111 @@ export default function weatherCodes(): any {
 		"51": {
 			day: {
 				description: "Plugim lleuger",
-				image: "/icons/drizzle.png",
+				image: "/icons/drizzle-day.png",
 			},
 			night: {
 				description: "Plugin lleuger",
-				image: "/icons/drizzle.png",
+				image: "/icons/drizzle-night.png",
 			},
 		},
 		"53": {
 			day: {
 				description: "Plugim",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle-day.png",
 			},
 			night: {
 				description: "Plugim",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle-night.png",
 			},
 		},
 		"55": {
 			day: {
 				description: "Plugim intens",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle-night.png",
 			},
 			night: {
 				description: "Plugim intens",
-				image: "/icons/plugim.svg",
+				image: "/icons/drizzle-night.png",
 			},
 		},
 		"56": {
 			day: {
 				description: "Plugim lleuger gelat",
-				image: "/icons/plugim.svg",
+				image: "/icons/freezing-drizzle-day.png",
 			},
 			night: {
 				description: "Plugim lleuger gelat",
-				image: "/icons/plugim.svg",
+				image: "/icons/freezing-drizzle-night.png",
 			},
 		},
 		"57": {
 			day: {
 				description: "Plugim gelat",
-				image: "/icons/plugim.svg",
+				image: "/icons/freezing-drizzle-day.png",
 			},
 			night: {
 				description: "Plugim gelat",
-				image: "/icons/plugim.svg",
+				image: "/icons/freezing-drizzle-night.png",
 			},
 		},
 		"61": {
 			day: {
 				description: "Pluja lleugera",
-				image: "/icons/drizzle.png",
+				image: "/icons/light-rain.png",
 			},
 			night: {
 				description: "Pluja lleugera",
-				image: "/icons/drizzle.png",
+				image: "/icons/light-rain.png",
 			},
 		},
 		"63": {
 			day: {
 				description: "Pluja",
-				image: "/icons/pluja.svg",
+				image: "/icons/large-rain.png",
 			},
 			night: {
 				description: "Pluja",
-				image: "/icons/pluja.svg",
+				image: "/icons/large-rain.png",
 			},
 		},
 		"65": {
 			day: {
 				description: "Pluja intensa",
-				image: "/icons/pluja.svg",
+				image: "/icons/heavy-rain.png",
 			},
 			night: {
 				description: "Pluja intensa",
-				image: "/icons/pluja.svg",
+				image: "/icons/heavy-rain.png",
 			},
 		},
 		"66": {
 			day: {
 				description: "Pluja gelada",
-				image: "/icons/pluja.svg",
+				image: "/icons/freezing-rain-day.png",
 			},
 			night: {
 				description: "Pluja gelada",
-				image: "/icons/pluja.svg",
+				image: "/icons/freezing-rain-night.png",
 			},
 		},
 		"67": {
 			day: {
 				description: "Pluja gelada",
-				image: "/icons/pluja.svg",
+				image: "/icons/freezing-rain-day.png",
 			},
 			night: {
 				description: "Pluja gelada",
-				image: "/icons/pluja.svg",
+				image: "/icons/freezing-rain-night.png",
 			},
 		},
 		"71": {
 			day: {
 				description: "Neu lleugera",
-				image: "https://openweathermap.org/img/wn/13d@2x.png",
+				image: "/icons/light-snow.png",
 			},
 			night: {
 				description: "Neu lleugera",
-				image: "https://openweathermap.org/img/wn/13n@2x.png",
+				image: "/icons/light-snow.png",
 			},
 		},
 		"73": {
@@ -203,31 +203,31 @@ export default function weatherCodes(): any {
 		"80": {
 			day: {
 				description: "Ruixats lleugers",
-				image: "https://openweathermap.org/img/wn/09d@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 			night: {
 				description: "Ruixats lleugers",
-				image: "https://openweathermap.org/img/wn/09n@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 		},
 		"81": {
 			day: {
 				description: "Ruixats",
-				image: "https://openweathermap.org/img/wn/09d@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 			night: {
 				description: "Ruixats",
-				image: "https://openweathermap.org/img/wn/09n@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 		},
 		"82": {
 			day: {
 				description: "Ruixats intensos",
-				image: "https://openweathermap.org/img/wn/09d@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 			night: {
 				description: "Ruixats intensos",
-				image: "https://openweathermap.org/img/wn/09n@2x.png",
+				image: "/icons/heavy-rain.png",
 			},
 		},
 		"85": {
@@ -253,31 +253,31 @@ export default function weatherCodes(): any {
 		"95": {
 			day: {
 				description: "Tormenta elèctrica",
-				image: "https://openweathermap.org/img/wn/11d@2x.png",
+				image: "/icons/storm.png",
 			},
 			night: {
 				description: "Tormenta elèctrica",
-				image: "https://openweathermap.org/img/wn/11n@2x.png",
+				image: "/icons/storm.png",
 			},
 		},
 		"96": {
 			day: {
 				description: "Tormenta elèctrica amb calamarsa",
-				image: "https://openweathermap.org/img/wn/11d@2x.png",
+				image: "/icons/storm.png",
 			},
 			night: {
 				description: "Tormenta elèctrica amb calamarsa",
-				image: "https://openweathermap.org/img/wn/11n@2x.png",
+				image: "/icons/storm.png",
 			},
 		},
 		"99": {
 			day: {
 				description: "Tormenta elèctrica amb calamarsa",
-				image: "https://openweathermap.org/img/wn/11d@2x.png",
+				image: "/icons/storm.png",
 			},
 			night: {
 				description: "Tormenta elèctrica amb calamarsa",
-				image: "https://openweathermap.org/img/wn/11n@2x.png",
+				image: "/icons/storm.png",
 			},
 		},
 	}

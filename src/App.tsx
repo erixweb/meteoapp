@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./App.css"
 import { DropletIcon } from "./components/icons/droplet-icon.tsx"
 import { UmbrellaIcon } from "./components/icons/umbrella-icon.tsx"
@@ -7,9 +7,25 @@ import { Weather, WeatherCodes } from "./types"
 import weatherCodes from "./weather-codes.ts"
 import { handleWheelScroll } from "./forecast-scroll.ts"
 
-function request_weather() {
-	const API_ENDPOINT =
-		"https://api.open-meteo.com/v1/forecast?latitude=37.4712&longitude=-5.6461&hourly=temperature_2m,weather_code,relative_humidity_2m,precipitation,wind_speed_10m,apparent_temperature"
+type City = {
+	latitude: number
+	longitude: number
+}
+
+const CITIES: Record<string, City> = {
+	carmona: {
+		latitude: 37.4712,
+		longitude: -5.6461,
+	},
+	malgrat: {
+		latitude: 41.6436707,
+		longitude: 2.7426636,
+	},
+}
+type ForecastDay = "TODAY" | "TOMORROW"
+
+function request_weather(lat: number, long: number) {
+	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,weather_code,relative_humidity_2m,precipitation,wind_speed_10m,apparent_temperature&models=dmi_seamless`
 
 	return fetch(API_ENDPOINT)
 }
@@ -17,10 +33,13 @@ function request_weather() {
 export function App() {
 	const [weatherData, setWeatherData] = useState<Weather | null>(null)
 	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
+	const [city, setCity] = useState("carmona")
+	const [forecastDay, setForecastDay] = useState<ForecastDay>("TODAY")
 	const currentHour = new Date().getHours()
+	const [sliceHours, setSliceHours] = useState([0, 24])
 
 	useEffect(() => {
-		request_weather()
+		request_weather(CITIES[city].latitude, CITIES[city].longitude)
 			.then((response) => {
 				response.json().then((data) => {
 					setWeatherData(data)
@@ -31,7 +50,17 @@ export function App() {
 			})
 
 		// Wait for DOM to be ready before attaching event listener
-	}, [])
+	}, [city])
+
+	useEffect(() => {
+		if (forecastDay === "TODAY") {
+			setSliceHours([0, 24])
+		} else if (forecastDay === "TOMORROW") {
+			setSliceHours([24, 48])
+		} else if (forecastDay === "THIRD_DAY") {
+			setSliceHours([48, 72])
+		}
+	}, [forecastDay])
 
 	const forecast = document.querySelector(".forecast")
 
@@ -53,9 +82,21 @@ export function App() {
 		<main className="from-blue-200 to-blue-700 bg-gradient-to-b">
 			<div className="header glass p-5">
 				<div className="m-auto w-full text-center py-4">
-					<h3 className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b">
-						Carmona
-					</h3>
+					<select
+						className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b bg-white/10 rounded p-2"
+						id="city"
+						onChange={() => {
+							const selectedCity = (
+								document.getElementById(
+									"city",
+								) as HTMLSelectElement
+							).value
+							setCity(selectedCity)
+						}}
+					>
+						<option value="carmona">Carmona</option>
+						<option value="malgrat">Malgrat de Mar</option>
+					</select>
 				</div>
 				<div className="text-center flex items-center justify-center w-full">
 					<h2 className="text-9xl w-full relative font-bold from-purple-500 to-purple-700 text-transparent bg-clip-text bg-gradient-to-b">
@@ -102,64 +143,77 @@ export function App() {
 
 			<section className="w-full m-auto container p-5">
 				<h2 className="text-xl font-bold py-2 text-white">
-					Today's forecast
+					<select
+						className="text-xl font-bold   rounded p-2"
+						value={forecastDay}
+						onChange={(e) =>
+							setForecastDay(e.target.value as ForecastDay)
+						}
+					>
+						<option value="TODAY">Hoy</option>
+						<option value="TOMORROW">Mañana</option>
+						<option value="THIRD_DAY">Pasado mañana</option>
+					</select>
 				</h2>
 
 				<div>
 					{weatherData ? (
-						<div className="flex  gap-4 overflow-x-scroll forecast ">
+						<div className="flex gap-4 overflow-x-scroll forecast ">
 							{weatherData.hourly.time
-								.slice(0, 24)
-								.map((time, index) => (
-									<div
-										key={index}
-										className="glass p-4 rounded-[16px] shadow-md min-w-26 w-full"
-									>
-										<h3 className="text-lg font-semibold">
-											{new Date(time).toLocaleTimeString(
-												[],
+								.slice(sliceHours[0], sliceHours[1])
+								.map((time, idx) => {
+									const realIndex = sliceHours[0] + idx
+									return (
+										<div
+											key={realIndex}
+											className="glass p-4 rounded-[16px] shadow-md min-w-26 w-full"
+										>
+											<h3 className="text-lg font-semibold text-center">
+												{new Date(time).toLocaleTimeString(
+													[],
+													{
+														hour: "2-digit",
+														minute: "2-digit",
+													},
+												)}
+											</h3>
+											<p className="flex items-center justify-center py-2">
+												<img
+													src={
+														weatherCodes()[
+															weatherData?.hourly
+																?.weather_code[
+																realIndex
+															]
+														].day.image
+													}
+													className="w-16 h-16"
+												/>
+											</p>
+											<p className="text-center text-xl text-indigo-800 font-bold">
 												{
-													hour: "2-digit",
-													minute: "2-digit",
-												},
-											)}
-										</h3>
-										<p className="flex items-center justify-center py-2">
-											<img
-												src={
-													weatherCodes()[
-														weatherData?.hourly
-															?.weather_code[
-															index
-														]
-													].day.image
+													weatherData.hourly
+														.temperature_2m[realIndex]
 												}
-												className="w-16 h-16"
-											></img>
-										</p>
-										<p className="text-center text-xl text-indigo-800 font-bold">
-											{
-												weatherData.hourly
-													.temperature_2m[index]
-											}
-											ºC
-										</p>
-										<p className="text-center">
-											{
-												weatherData.hourly
-													.relative_humidity_2m[index]
-											}
-											%
-										</p>
-										<p className="text-center">
-											{
-												weatherData.hourly
-													.wind_speed_10m[index]
-											}{" "}
-											km/h
-										</p>
-									</div>
-								))}
+												ºC
+											</p>
+											<p className="text-center">
+												{
+													weatherData.hourly
+														.relative_humidity_2m[realIndex]
+												}
+												%
+											</p>
+											<p className="text-center">
+												{
+													weatherData.hourly
+														.wind_speed_10m[realIndex]
+												}{" "}
+												km/h
+											</p>
+										</div>
+									)
+								})}
 						</div>
 					) : (
 						<p>Loading forecast data...</p>
