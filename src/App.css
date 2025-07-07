@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+
+@view-transition { 
+  navigation: auto;
+}
 * {
 	box-sizing: border-box;
 }

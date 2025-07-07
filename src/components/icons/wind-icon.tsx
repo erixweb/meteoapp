@@ -10,7 +10,7 @@ export function WindIcon() {
 			strokeWidth="2"
 			strokeLinecap="round"
 			strokeLinejoin="round"
-			className="icon icon-tabler icons-tabler-outline icon-tabler-wind m-auto"
+			className="icon icon-tabler icons-tabler-outline icon-tabler-wind m-auto text-purple-700"
 		>
 			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 			<path d="M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24" />
