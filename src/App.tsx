@@ -9,6 +9,7 @@ import { handleWheelScroll } from "./forecast-scroll.ts"
 import { TemperatureIcon } from "./components/icons/temperature-icon.tsx"
 import { CompassIcon } from "./components/icons/compass-icon.tsx"
 import { CloudIcon } from "./components/icons/cloud-icon.tsx"
+import { MapForecast } from "./components/map-forecast.tsx"
 
 type City = {
 	latitude: number
@@ -71,16 +72,7 @@ export function App() {
 	function degreesToDirection(degrees: number | undefined): string {
 		if (!degrees) return "0º"
 
-		const directions = [
-			"N",
-			"NE",
-			"E",
-			"SE",
-			"S",
-			"SW",
-			"W",
-			"NW",
-		]
+		const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 		const index = Math.round(degrees / 45) % 8
 		return directions[index]
 	}
@@ -206,7 +198,6 @@ export function App() {
 											onClick={() => {
 												setSelectedHour(realIndex)
 											}}
-
 										>
 											<h3 className="text-lg font-semibold text-center">
 												{new Date(
@@ -270,51 +261,89 @@ export function App() {
 					<TemperatureIcon />
 					<div className="flex flex-col w-full">
 						<span className="text-slate-400">Temperatura</span>
-						<span>{weatherData?.hourly.temperature_2m[selectedHour]}ºC</span>
+						<span>
+							{weatherData?.hourly.temperature_2m[selectedHour]}ºC
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<TemperatureIcon />
 					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Sensación térmica</span>
-						<span>{weatherData?.hourly.apparent_temperature[selectedHour]}ºC</span>
+						<span className="text-slate-400">
+							Sensación térmica
+						</span>
+						<span>
+							{
+								weatherData?.hourly.apparent_temperature[
+									selectedHour
+								]
+							}
+							ºC
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<WindIcon />
 					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Velocidad del viento</span>
-						<span>{weatherData?.hourly.wind_speed_10m[selectedHour]} km/h {degreesToDirection(weatherData?.hourly.wind_direction_10m[selectedHour])}</span>
+						<span className="text-slate-400">
+							Velocidad del viento
+						</span>
+						<span>
+							{weatherData?.hourly.wind_speed_10m[selectedHour]}{" "}
+							km/h{" "}
+							{degreesToDirection(
+								weatherData?.hourly.wind_direction_10m[
+									selectedHour
+								],
+							)}
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<UmbrellaIcon />
 					<div className="flex flex-col w-full">
 						<span className="text-slate-400">Precipitación</span>
-						<span>{weatherData?.hourly.precipitation[selectedHour]} mm</span>
+						<span>
+							{weatherData?.hourly.precipitation[selectedHour]} mm
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<DropletIcon />
 					<div className="flex flex-col w-full">
 						<span className="text-slate-400">Humedad</span>
-						<span>{weatherData?.hourly.relative_humidity_2m[selectedHour]}%</span>
+						<span>
+							{
+								weatherData?.hourly.relative_humidity_2m[
+									selectedHour
+								]
+							}
+							%
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<CompassIcon />
 					<div className="flex flex-col w-full">
 						<span className="text-slate-400">Presión</span>
-						<span>{weatherData?.hourly.surface_pressure[selectedHour]} hPa</span>
+						<span>
+							{weatherData?.hourly.surface_pressure[selectedHour]}{" "}
+							hPa
+						</span>
 					</div>
 				</article>
 				<article className="flex gap-2.5 items-center justify-center">
 					<CloudIcon />
 					<div className="flex flex-col w-full">
 						<span className="text-slate-400">Nubosidad</span>
-						<span>{weatherData?.hourly.cloud_cover[selectedHour]}%</span>
+						<span>
+							{weatherData?.hourly.cloud_cover[selectedHour]}%
+						</span>
 					</div>
 				</article>
+			</section>
+			<section className="w-full m-auto container px-4 py-4 ">
+				<MapForecast />
 			</section>
 		</main>
 	)

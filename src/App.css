@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
-
-@view-transition { 
-  navigation: auto;
+@view-transition {
+	navigation: auto;
 }
 * {
 	box-sizing: border-box;
@@ -43,12 +42,11 @@ main {
 		background: rgba(255, 255, 255, 0.7);
 		box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
 		backdrop-filter: blur(20px);
-		
+
 		-webkit-backdrop-filter: blur(20px);
 		position: relative;
 		z-index: 1;
 	}
-
 }
 
 .stats-box * {
