@@ -14,34 +14,63 @@ import { MapForecast } from "./components/map-forecast.tsx"
 type City = {
 	latitude: number
 	longitude: number
+	name: string
 }
 
-const CITIES: Record<string, City> = {
-	carmona: {
-		latitude: 37.4712,
-		longitude: -5.6461,
+type Cities = Record<string, Record<string, City>>
+
+const CITIES: Record<string, Record<string, City>> = {
+	Catalunya: {
+		barcelona: {
+			latitude: 41.3851,
+			longitude: 2.1734,
+			name: "Barcelona"
+		},
+		malgrat: {
+			latitude: 41.6436707,
+			longitude: 2.7426636,
+			name: "Malgrat de Mar"
+		},
+		badalona: {
+			latitude: 41.437996,
+			longitude: 2.226629,
+			name: "Badalona"
+		},
+		sabadell: {
+			latitude: 41.537391,
+			longitude: 2.125115,
+			name: "Sabadell"
+		},
 	},
-	malgrat: {
-		latitude: 41.6436707,
-		longitude: 2.7426636,
+	España: {
+		carmona: {
+			latitude: 37.4712,
+			longitude: -5.6461,
+			name: "Carmona"
+		},
+		sevilla: {
+			latitude: 37.3886,
+			longitude: -5.9823,
+			name: "Sevilla"
+		},
 	},
-	badalona: {
-		latitude: 41.437996,
-		longitude: 2.226629,
-	},
-	barcelona: {
-		latitude: 41.3851,
-		longitude: 2.1734,
-	},
-	sevilla: {
-		latitude: 37.3886,
-		longitude: -5.9823,
+	Francia: {
+		paris: {
+			latitude: 48.8566,
+			longitude: 2.3522,
+			name: "Paris"
+		},
+		marseille: {
+			latitude: 43.2965,
+			longitude: 5.3698,
+			name: "Marseille"
+		}
 	},
 }
 type ForecastDay = "TODAY" | "TOMORROW" | "THIRD_DAY"
 
 function request_weather(lat: number, long: number) {
-	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&models=dmi_seamless`
+	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&models=meteofrance_seamless`
 
 	return fetch(API_ENDPOINT)
 }
@@ -56,15 +85,25 @@ export function App() {
 	const [sliceHours, setSliceHours] = useState([0, 24])
 
 	useEffect(() => {
-		request_weather(CITIES[city].latitude, CITIES[city].longitude)
-			.then((response) => {
-				response.json().then((data) => {
-					setWeatherData(data)
+		// Find the city object from all countries
+		let selectedCityObj: City | undefined;
+		for (const country of Object.keys(CITIES)) {
+			if (CITIES[country][city]) {
+				selectedCityObj = CITIES[country][city];
+				break;
+			}
+		}
+		if (selectedCityObj) {
+			request_weather(selectedCityObj.latitude, selectedCityObj.longitude)
+				.then((response) => {
+					response.json().then((data) => {
+						setWeatherData(data)
+					})
 				})
-			})
-			.catch((error) => {
-				console.error("Error fetching weather data:", error)
-			})
+				.catch((error) => {
+					console.error("Error fetching weather data:", error)
+				})
+		}
 
 		// Wait for DOM to be ready before attaching event listener
 	}, [city])
@@ -119,11 +158,32 @@ export function App() {
 							setCity(selectedCity)
 						}}
 					>
-						<option value="barcelona">Barcelona</option>
-						<option value="malgrat">Malgrat de Mar</option>
-						<option value="badalona">Badalona</option>
-						<option value="sevilla">Sevilla</option>
-						<option value="carmona">Carmona</option>
+						{Object.entries(CITIES).map(([country, cities]) => (
+							<optgroup
+								key={country}
+								label=""
+								className="font-medium text-start ml-0 w-full px-4"
+								style={{ paddingLeft: 0 }}
+							>
+								<option
+									disabled
+									className="bg-transparent text-blue-400 font-semibold text-left my-2"
+									style={{
+										cursor: "default",
+										border: "none",
+										background: "none",
+										paddingLeft: "8px",
+									}}
+								>
+									{country}
+								</option>
+								{Object.entries(cities).map(([cityKey, city]) => (
+									<option key={cityKey} value={cityKey} className="py-1 font-bold px-4">
+										{city.name}
+									</option>
+								))}
+							</optgroup>
+						))}
 					</select>
 				</div>
 				<div className="text-center flex items-center justify-center w-full">
