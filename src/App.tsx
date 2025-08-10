@@ -11,8 +11,6 @@ import { CompassIcon } from "./components/icons/compass-icon.tsx"
 import { CloudIcon } from "./components/icons/cloud-icon.tsx"
 import { MapForecast } from "./components/map-forecast.tsx"
 
-import "/node_modules/flag-icons/css/flag-icons.min.css"
-
 type City = {
 	latitude: number
 	longitude: number
@@ -33,15 +31,20 @@ const CITIES: Record<string, CountryCities> = {
 				longitude: 2.1734,
 				name: "Barcelona",
 			},
-			malgrat: {
-				latitude: 41.6436707,
-				longitude: 2.7426636,
-				name: "Malgrat de Mar",
-			},
 			badalona: {
 				latitude: 41.437996,
 				longitude: 2.226629,
 				name: "Badalona",
+			},
+			santa_coloma_de_gramenet: {
+				latitude: 41.4359859,
+				longitude: 2.2128992,
+				name: "Santa Coloma de Gramenet"
+			},
+			malgrat: {
+				latitude: 41.6436707,
+				longitude: 2.7426636,
+				name: "Malgrat de Mar",
 			},
 			sabadell: {
 				latitude: 41.537391,
@@ -49,6 +52,26 @@ const CITIES: Record<string, CountryCities> = {
 				name: "Sabadell",
 			},
 		},
+	},
+	Andorra: {
+		flag: "ad",
+		cities: {
+			andorra_la_vella: {
+				latitude: 42.506849,
+				longitude: 1.522021,
+				name: "Andorra la Vella",
+			}
+		}
+	},
+	Inglaterra: {
+		flag: "gb-eng",
+		cities: {
+			london: {
+				latitude: 51.5085,
+				longitude: -0.1257,
+				name: "London",
+			}
+		}
 	},
 	España: {
 		flag: "es",
