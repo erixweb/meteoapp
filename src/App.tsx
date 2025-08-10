@@ -11,60 +11,74 @@ import { CompassIcon } from "./components/icons/compass-icon.tsx"
 import { CloudIcon } from "./components/icons/cloud-icon.tsx"
 import { MapForecast } from "./components/map-forecast.tsx"
 
+import "/node_modules/flag-icons/css/flag-icons.min.css"
+
 type City = {
 	latitude: number
 	longitude: number
 	name: string
 }
 
-type Cities = Record<string, Record<string, City>>
+type CountryCities = {
+	flag: string
+	cities: Record<string, City>
+}
 
-const CITIES: Record<string, Record<string, City>> = {
+const CITIES: Record<string, CountryCities> = {
 	Catalunya: {
-		barcelona: {
-			latitude: 41.3851,
-			longitude: 2.1734,
-			name: "Barcelona"
-		},
-		malgrat: {
-			latitude: 41.6436707,
-			longitude: 2.7426636,
-			name: "Malgrat de Mar"
-		},
-		badalona: {
-			latitude: 41.437996,
-			longitude: 2.226629,
-			name: "Badalona"
-		},
-		sabadell: {
-			latitude: 41.537391,
-			longitude: 2.125115,
-			name: "Sabadell"
+		flag: "es-ct",
+		cities: {
+			barcelona: {
+				latitude: 41.3851,
+				longitude: 2.1734,
+				name: "Barcelona",
+			},
+			malgrat: {
+				latitude: 41.6436707,
+				longitude: 2.7426636,
+				name: "Malgrat de Mar",
+			},
+			badalona: {
+				latitude: 41.437996,
+				longitude: 2.226629,
+				name: "Badalona",
+			},
+			sabadell: {
+				latitude: 41.537391,
+				longitude: 2.125115,
+				name: "Sabadell",
+			},
 		},
 	},
 	España: {
-		carmona: {
-			latitude: 37.4712,
-			longitude: -5.6461,
-			name: "Carmona"
-		},
-		sevilla: {
-			latitude: 37.3886,
-			longitude: -5.9823,
-			name: "Sevilla"
+		flag: "es",
+		cities: {
+			carmona: {
+				latitude: 37.4712,
+				longitude: -5.6461,
+				name: "Carmona",
+			},
+			sevilla: {
+				latitude: 37.3886,
+				longitude: -5.9823,
+				name: "Sevilla",
+			},
 		},
 	},
 	Francia: {
-		paris: {
-			latitude: 48.8566,
-			longitude: 2.3522,
-			name: "Paris"
+		flag: "fr",
+		cities: {
+			paris: {
+				latitude: 48.8566,
+				longitude: 2.3522,
+				name: "Paris",
+			},
+			marseille: {
+				latitude: 43.2965,
+				longitude: 5.3698,
+				name: "Marseille",
+			},
 		},
-		marseille: {
-			latitude: 43.2965,
-			longitude: 5.3698,
-			name: "Marseille"
-		}
 	},
 }
 type ForecastDay = "TODAY" | "TOMORROW" | "THIRD_DAY"
@@ -86,11 +100,11 @@ export function App() {
 
 	useEffect(() => {
 		// Find the city object from all countries
-		let selectedCityObj: City | undefined;
+		let selectedCityObj: City | undefined
 		for (const country of Object.keys(CITIES)) {
-			if (CITIES[country][city]) {
-				selectedCityObj = CITIES[country][city];
-				break;
+			if (CITIES[country].cities[city]) {
+				selectedCityObj = CITIES[country].cities[city]
+				break
 			}
 		}
 		if (selectedCityObj) {
@@ -165,23 +179,34 @@ export function App() {
 								className="font-medium text-start ml-0 w-full px-4"
 								style={{ paddingLeft: 0 }}
 							>
-								<option
-									disabled
-									className="bg-transparent text-blue-400 font-semibold text-left my-2"
-									style={{
-										cursor: "default",
-										border: "none",
-										background: "none",
-										paddingLeft: "8px",
-									}}
-								>
-									{country}
-								</option>
-								{Object.entries(cities).map(([cityKey, city]) => (
-									<option key={cityKey} value={cityKey} className="py-1 font-bold px-4">
-										{city.name}
+								<div className="flex pl-4">
+									<span
+										className={`w-fit rounded-sm fi fi-${cities.flag}`}
+									></span>
+									<option
+										disabled
+										className="bg-transparent text-blue-400 font-semibold text-left my-2"
+										style={{
+											cursor: "default",
+											border: "none",
+											background: "none",
+											paddingLeft: "8px",
+										}}
+									>
+										{country}
 									</option>
-								))}
+								</div>
+								{Object.entries(cities.cities).map(
+									([cityKey, cityObj]) => (
+										<option
+											key={cityKey}
+											value={cityKey}
+											className="py-1 font-bold px-4"
+										>
+											{cityObj.name}
+										</option>
+									),
+								)}
 							</optgroup>
 						))}
 					</select>
