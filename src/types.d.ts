@@ -8,6 +8,7 @@ export interface Weather {
 	elevation: number
 	hourly_units: HourlyUnits
 	hourly: Hourly
+	current: any
 }
 
 export interface Hourly {
