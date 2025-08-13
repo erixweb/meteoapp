@@ -107,7 +107,7 @@ const CITIES: Record<string, CountryCities> = {
 type ForecastDay = "TODAY" | "TOMORROW" | "THIRD_DAY"
 
 function request_weather(lat: number, long: number) {
-	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&models=meteofrance_seamless`
+	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&models=meteofrance_seamless&current=temperature_2m`
 
 	return fetch(API_ENDPOINT)
 }
@@ -180,8 +180,8 @@ export function App() {
 	}, [weatherData])
 
 	return (
-		<main className="bg-gray-950 min-h-screen py-4 px-5">
-			<div className="container m-auto border-2 rounded-2xl border-slate-500 px-5 py-10">
+		<main className="dark:bg-gray-950 bg-gray-100 text-black dark:text-white min-h-screen py-4 px-5">
+			<div className="container m-auto  rounded-2xl dark:bg-gray-700 bg-gray-200 px-5 py-10">
 				<div className="m-auto w-full text-center py-4">
 					<select
 						className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b bg-white/10 rounded p-2"
@@ -236,7 +236,7 @@ export function App() {
 				</div>
 				<div className="text-center flex items-center justify-center w-full">
 					<h2 className="text-9xl w-full relative font-bold from-gray-200 to-gray-500 text-transparent bg-clip-text bg-gradient-to-b">
-						{weatherData?.hourly?.temperature_2m[currentHour]}º
+						{weatherData?.current?.temperature_2m}º
 						<img
 							src={weatherCode?.image}
 							alt="Weather image"
@@ -249,7 +249,7 @@ export function App() {
 						/>
 					</h2>
 				</div>
-				<div className="m-auto border-2 border-slate-500 bg-gray-900 w-full max-w-[600px] p-4 mt-[70px] rounded-full flex text-slate-300">
+				<div className="m-auto border-2 border-slate-500 dark:bg-gray-900 bg-gray-100 w-full max-w-[600px] p-4 mt-[70px] rounded-full flex dark:text-slate-300 text-slate-500">
 					<div className="text-center w-full">
 						<UmbrellaIcon />
 						<p>
@@ -278,7 +278,7 @@ export function App() {
 			</div>
 
 			<section className="w-full m-auto container">
-				<h2 className="text-xl font-bold py-2 text-white">
+				<h2 className="text-xl font-bold py-2">
 					<select
 						className="text-xl font-bold   rounded p-2"
 						value={forecastDay}
@@ -294,7 +294,7 @@ export function App() {
 
 				<div>
 					{weatherData ? (
-						<div className="flex gap-4 overflow-x-scroll forecast py-2">
+						<div className="flex gap-4 overflow-x-scroll forecast py-2 dark:text-white text-black">
 							{weatherData.hourly.time
 								.slice(sliceHours[0], sliceHours[1])
 								.map((time, idx) => {
@@ -302,7 +302,7 @@ export function App() {
 									return (
 										<div
 											key={realIndex}
-											className=" border-2 border-slate-500 text-white p-4 rounded-[16px] shadow-md min-w-26 w-full"
+											className=" dark:bg-gray-700 bg-gray-200 p-4 rounded-[16px] shadow-md min-w-26 w-full"
 											onClick={() => {
 												setSelectedHour(realIndex)
 											}}
@@ -328,7 +328,7 @@ export function App() {
 													className="w-16 h-16"
 												/>
 											</p>
-											<p className="text-center text-xl text-indigo-800 font-bold">
+											<p className="text-center text-xl text-indigo-600 font-bold">
 												{
 													weatherData.hourly
 														.temperature_2m[
@@ -364,7 +364,7 @@ export function App() {
 					)}
 				</div>
 			</section>
-			<section className="w-full m-auto container border-2 border-slate-500 text-white grid grid-cols-2 gap-7 px-4 py-4 rounded-xl mt-4">
+			<section className="w-full m-auto container dark:bg-gray-700 bg-gray-200 dark:text-white grid grid-cols-2 gap-7 px-4 py-4 rounded-xl mt-4">
 				<article className="flex gap-2.5 items-center justify-center">
 					<TemperatureIcon />
 					<div className="flex flex-col w-full">
