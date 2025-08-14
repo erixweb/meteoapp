@@ -1,7 +1,5 @@
 import { defineConfig } from "@rsbuild/core"
 import { pluginReact } from "@rsbuild/plugin-react"
-import tailwindcss from "tailwindcss"
-import autoprefixer from "autoprefixer" // Import autoprefixer
 
 export default defineConfig({
 	plugins: [pluginReact()],
