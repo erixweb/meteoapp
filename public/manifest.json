@@ -5,18 +5,17 @@
 	"display": "standalone",
 	"background_color": "#000",
 	"theme_color": "#000000",
+	"description": "Previsió del temps precisa amb cobertura per tota Catalunya.",
 	"icons": [
 		{
-			"src": "/favicon.jpg",
-			"type": "image/jpeg",
-			"sizes": "192x192",
-			"purpose": "any maskable"
+			"src": "/app-icon/meteodev-192x192.webp",
+			"type": "image/webp",
+			"sizes": "192x192"
 		},
 		{
-			"src": "/favicon.jpg",
-			"type": "image/jpeg",
-			"sizes": "512x512",
-			"purpose": "any maskable"
+			"src": "/app-icon/meteodev-512x512.webp",
+			"type": "image/webp",
+			"sizes": "512x512"
 		}
 	]
 }
