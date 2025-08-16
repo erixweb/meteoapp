@@ -1,6 +1,6 @@
 import { defineConfig } from "@rsbuild/core"
 import { pluginReact } from "@rsbuild/plugin-react"
-import { InjectManifest } from "@aaroon/workbox-rspack-plugin"
+import { GenerateSW, InjectManifest } from "@aaroon/workbox-rspack-plugin"
 
 export default defineConfig({
 	plugins: [pluginReact()],
@@ -26,6 +26,10 @@ export default defineConfig({
 						swSrc: "./src/sw.ts",
 						swDest: "sw.js",
 						exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
+					}),
+					new GenerateSW({
+						skipWaiting: true,
+						clientsClaim: true,
 					}),
 				)
 			}
