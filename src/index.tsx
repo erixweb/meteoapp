@@ -12,7 +12,13 @@ if (rootEl) {
 	)
 }
 
+navigator.serviceWorker.getRegistrations().then((registrations) => {
+	for (const registration of registrations) {
+		registration.unregister()
+	}
+})
 // Register the service worker in production
+/*
 if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
 	navigator.serviceWorker.register("/service-worker.js").then((reg) => {
 		reg.addEventListener("updatefound", () => {
@@ -38,4 +44,4 @@ if (process.env.NODE_ENV === "production" && "serviceWorker" in navigator) {
 				console.log("SW registration failed: ", registrationError)
 			})
 	})
-}
+}*/
