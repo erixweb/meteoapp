@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { use, useCallback, useEffect, useRef, useState } from "react"
 import "./App.css"
 import { DropletIcon } from "./components/icons/droplet-icon.tsx"
 import { UmbrellaIcon } from "./components/icons/umbrella-icon.tsx"
@@ -123,14 +123,13 @@ export function App() {
 	const [selectedHour, setSelectedHour] = useState(new Date().getHours())
 	const [sliceHours, setSliceHours] = useState([0, 24])
 
-	window.addEventListener("load", () => {
+	useEffect(()  => {
 		const $el = document.getElementById("city") as HTMLSelectElement
 
 		if (!$el) return
 
 		$el.value = city 
-
-	})
+	}, [window])
 	useEffect(() => {
 		// Find the city object from all countries
 		setLastCity(city)
