@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import "./App.css"
 import { DropletIcon } from "./components/icons/droplet-icon.tsx"
 import { UmbrellaIcon } from "./components/icons/umbrella-icon.tsx"
@@ -10,6 +10,7 @@ import { TemperatureIcon } from "./components/icons/temperature-icon.tsx"
 import { CompassIcon } from "./components/icons/compass-icon.tsx"
 import { CloudIcon } from "./components/icons/cloud-icon.tsx"
 import { MapForecast } from "./components/map-forecast.tsx"
+import { useLocalStorage } from "./hooks/use-storage.tsx"
 
 type City = {
 	latitude: number
@@ -39,7 +40,7 @@ const CITIES: Record<string, CountryCities> = {
 			santa_coloma_de_gramenet: {
 				latitude: 41.4359859,
 				longitude: 2.2128992,
-				name: "Santa Coloma de Gramenet"
+				name: "Santa Coloma de Gramenet",
 			},
 			malgrat: {
 				latitude: 41.6436707,
@@ -60,8 +61,8 @@ const CITIES: Record<string, CountryCities> = {
 				latitude: 42.506849,
 				longitude: 1.522021,
 				name: "Andorra la Vella",
-			}
-		}
+			},
+		},
 	},
 	Inglaterra: {
 		flag: "gb-eng",
@@ -70,8 +71,8 @@ const CITIES: Record<string, CountryCities> = {
 				latitude: 51.5085,
 				longitude: -0.1257,
 				name: "London",
-			}
-		}
+			},
+		},
 	},
 	España: {
 		flag: "es",
@@ -113,16 +114,26 @@ function request_weather(lat: number, long: number) {
 }
 
 export function App() {
+	const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
 	const [weatherData, setWeatherData] = useState<Weather | null>(null)
 	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
-	const [city, setCity] = useState("barcelona")
+	const [city, setCity] = useState(lastCity || "barcelona")
 	const [forecastDay, setForecastDay] = useState<ForecastDay>("TODAY")
 	const currentHour = new Date().getHours()
 	const [selectedHour, setSelectedHour] = useState(new Date().getHours())
 	const [sliceHours, setSliceHours] = useState([0, 24])
 
+	window.addEventListener("load", () => {
+		const $el = document.getElementById("city") as HTMLSelectElement
+
+		if (!$el) return
+
+		$el.value = city 
+
+	})
 	useEffect(() => {
 		// Find the city object from all countries
+		setLastCity(city)
 		let selectedCityObj: City | undefined
 		for (const country of Object.keys(CITIES)) {
 			if (CITIES[country].cities[city]) {
@@ -175,7 +186,6 @@ export function App() {
 			setWeatherCode(
 				weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
 			)
-			console.log(weatherCode)
 		}
 	}, [weatherData])
 
