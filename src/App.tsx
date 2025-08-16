@@ -244,17 +244,17 @@ export function App() {
 					</select>
 				</div>
 				<div className="text-center flex items-center justify-center w-full">
-					<h2 className="text-9xl w-full relative font-bold from-gray-200 to-gray-500 text-transparent bg-clip-text bg-gradient-to-b">
+					<h2 className="text-9xl w-fit relative font-bold from-gray-200 to-gray-500 text-transparent bg-clip-text bg-gradient-to-b max-md:text-8xl ">
 						{weatherData?.current?.temperature_2m}º
 						<img
 							src={weatherCode?.image}
 							alt="Weather image"
-							className="w-[120px] h-[120px] absolute top-14 left-[60%] m-auto max-md:scale-75"
+							className="w-[120px] h-[120px] absolute top-14 right-[-50px] m-auto max-md:scale-75"
 						/>
 						<img
 							src={weatherCode?.image}
 							alt="Weather image"
-							className="w-[120px] h-[120px] absolute top-14 left-[60%] m-auto blur-3xl max-md:scale-75"
+							className="w-[120px] h-[120px] absolute top-14 right-[-50px] m-auto blur-3xl max-md:scale-75"
 						/>
 					</h2>
 				</div>
