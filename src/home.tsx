@@ -11,6 +11,10 @@ import { CompassIcon } from "./components/icons/compass-icon.tsx"
 import { CloudIcon } from "./components/icons/cloud-icon.tsx"
 import { MapForecast } from "./components/map-forecast.tsx"
 import { useLocalStorage } from "./hooks/use-storage.tsx"
+import { Temperature } from "./components/sections/temperature.tsx"
+import { MoreCurrentData } from "./components/sections/more-current-data.tsx"
+import { HourlyData } from "./components/sections/hourly-data.tsx"
+import { SelectedHourData } from "./components/sections/selected-hour-data.tsx"
 
 type City = {
 	latitude: number
@@ -113,7 +117,7 @@ function request_weather(lat: number, long: number) {
 	return fetch(API_ENDPOINT)
 }
 
-export function App() {
+export function Home() {
 	const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
 	const [weatherData, setWeatherData] = useState<Weather | null>(null)
 	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
@@ -122,6 +126,11 @@ export function App() {
 	const currentHour = new Date().getHours()
 	const [selectedHour, setSelectedHour] = useState(new Date().getHours())
 	const [sliceHours, setSliceHours] = useState([0, 24])
+
+
+	function updateSelectedHour(hour: number) {
+		setSelectedHour(hour)
+	}
 
 	useEffect(()  => {
 		const $el = document.getElementById("city") as HTMLSelectElement
@@ -154,15 +163,6 @@ export function App() {
 
 		// Wait for DOM to be ready before attaching event listener
 	}, [city])
-
-	function degreesToDirection(degrees: number | undefined): string {
-		if (!degrees) return "0º"
-
-		const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
-		const index = Math.round(degrees / 45) % 8
-		return directions[index]
-	}
-
 	useEffect(() => {
 		if (forecastDay === "TODAY") {
 			setSliceHours([0, 24])
@@ -243,47 +243,14 @@ export function App() {
 						))}
 					</select>
 				</div>
-				<div className="text-center flex items-center justify-center w-full">
-					<h2 className="text-9xl w-fit relative font-bold from-gray-200 to-gray-500 text-transparent bg-clip-text bg-gradient-to-b max-md:text-8xl ">
-						{weatherData?.current?.temperature_2m}º
-						<img
-							src={weatherCode?.image}
-							alt="Weather image"
-							className="w-[120px] h-[120px] absolute top-14 right-[-50px] m-auto max-md:scale-75"
-						/>
-						<img
-							src={weatherCode?.image}
-							alt="Weather image"
-							className="w-[120px] h-[120px] absolute top-14 right-[-50px] m-auto blur-3xl max-md:scale-75"
-						/>
-					</h2>
-				</div>
-				<div className="m-auto border-2 border-slate-500 dark:bg-gray-900 bg-gray-100 w-full max-w-[600px] p-4 mt-[70px] rounded-full flex dark:text-slate-300 text-slate-500">
-					<div className="text-center w-full">
-						<UmbrellaIcon />
-						<p>
-							{weatherData?.hourly?.precipitation[currentHour]}mm
-						</p>
-					</div>
-					<div className="text-center w-full">
-						<DropletIcon />
-						<p>
-							{
-								weatherData?.hourly?.relative_humidity_2m[
-									currentHour
-								]
-							}
-							%
-						</p>
-					</div>
-					<div className="text-center w-full">
-						<WindIcon />
-						<p>
-							{weatherData?.hourly?.wind_speed_10m[currentHour]}
-							km/h
-						</p>
-					</div>
-				</div>
+				<Temperature 
+					data={weatherData}
+					code={weatherCode}
+				/>
+				<MoreCurrentData 
+					data={weatherData}
+					currentHour={currentHour}
+				/>
 			</div>
 
 			<section className="w-full m-auto container">
@@ -301,164 +268,16 @@ export function App() {
 					</select>
 				</h2>
 
-				<div>
-					{weatherData ? (
-						<div className="flex gap-4 overflow-x-scroll forecast py-2 dark:text-white text-black">
-							{weatherData.hourly.time
-								.slice(sliceHours[0], sliceHours[1])
-								.map((time, idx) => {
-									const realIndex = sliceHours[0] + idx
-									return (
-										<div
-											key={realIndex}
-											className=" dark:bg-gray-700 bg-gray-200 p-4 rounded-[16px] shadow-md min-w-26 w-full"
-											onClick={() => {
-												setSelectedHour(realIndex)
-											}}
-										>
-											<h3 className="text-lg font-semibold text-center">
-												{new Date(
-													time,
-												).toLocaleTimeString([], {
-													hour: "2-digit",
-													minute: "2-digit",
-												})}
-											</h3>
-											<p className="flex items-center justify-center py-2">
-												<img
-													src={
-														weatherCodes()[
-															weatherData?.hourly
-																?.weather_code[
-																realIndex
-															]
-														].day.image
-													}
-													className="w-16 h-16"
-												/>
-											</p>
-											<p className="text-center text-xl text-indigo-600 font-bold">
-												{
-													weatherData.hourly
-														.temperature_2m[
-														realIndex
-													]
-												}
-												ºC
-											</p>
-											<p className="text-center">
-												{
-													weatherData.hourly
-														.relative_humidity_2m[
-														realIndex
-													]
-												}
-												%
-											</p>
-											<p className="text-center">
-												{
-													weatherData.hourly
-														.wind_speed_10m[
-														realIndex
-													]
-												}{" "}
-												km/h
-											</p>
-										</div>
-									)
-								})}
-						</div>
-					) : (
-						<p>Loading forecast data...</p>
-					)}
-				</div>
+				<HourlyData 
+					data={weatherData}
+					sliceHours={sliceHours}
+					updateSelectedHour={updateSelectedHour}
+				/>
 			</section>
-			<section className="w-full m-auto container dark:bg-gray-700 bg-gray-200 dark:text-white grid grid-cols-2 gap-7 px-4 py-4 rounded-xl mt-4">
-				<article className="flex gap-2.5 items-center justify-center">
-					<TemperatureIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Temperatura</span>
-						<span>
-							{weatherData?.hourly.temperature_2m[selectedHour]}ºC
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<TemperatureIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">
-							Sensación térmica
-						</span>
-						<span>
-							{
-								weatherData?.hourly.apparent_temperature[
-									selectedHour
-								]
-							}
-							ºC
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<WindIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">
-							Velocidad del viento
-						</span>
-						<span>
-							{weatherData?.hourly.wind_speed_10m[selectedHour]}{" "}
-							km/h{" "}
-							{degreesToDirection(
-								weatherData?.hourly.wind_direction_10m[
-									selectedHour
-								],
-							)}
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<UmbrellaIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Precipitación</span>
-						<span>
-							{weatherData?.hourly.precipitation[selectedHour]} mm
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<DropletIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Humedad</span>
-						<span>
-							{
-								weatherData?.hourly.relative_humidity_2m[
-									selectedHour
-								]
-							}
-							%
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<CompassIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Presión</span>
-						<span>
-							{weatherData?.hourly.surface_pressure[selectedHour]}{" "}
-							hPa
-						</span>
-					</div>
-				</article>
-				<article className="flex gap-2.5 items-center justify-center">
-					<CloudIcon />
-					<div className="flex flex-col w-full">
-						<span className="text-slate-400">Nubosidad</span>
-						<span>
-							{weatherData?.hourly.cloud_cover[selectedHour]}%
-						</span>
-					</div>
-				</article>
-			</section>
+			<SelectedHourData 
+				data={weatherData}
+				selectedHour={selectedHour}
+			/>
 			<section className="w-full m-auto container px-4 py-4 ">
 				<MapForecast />
 			</section>
