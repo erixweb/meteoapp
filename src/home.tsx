@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./App.css"
 import { Weather, WeatherCodes } from "./types"
 import weatherCodes from "./weather-codes.ts"
@@ -9,6 +9,8 @@ import { Temperature } from "./components/sections/temperature.tsx"
 import { MoreCurrentData } from "./components/sections/more-current-data.tsx"
 import { HourlyData } from "./components/sections/hourly-data.tsx"
 import { SelectedHourData } from "./components/sections/selected-hour-data.tsx"
+import { TemperatureMaxIcon } from "./components/icons/temperature-max-icon.tsx"
+import { TemperatureMinIcon } from "./components/icons/temperature-min-icon.tsx"
 
 type City = {
 	latitude: number
@@ -120,18 +122,18 @@ export function Home() {
 	const currentHour = new Date().getHours()
 	const [selectedHour, setSelectedHour] = useState(new Date().getHours())
 	const [sliceHours, setSliceHours] = useState([0, 24])
-
+	const [temperatureRange, setTemperatureRange] = useState<number[]>([0, 0])
 
 	function updateSelectedHour(hour: number) {
 		setSelectedHour(hour)
 	}
 
-	useEffect(()  => {
+	useEffect(() => {
 		const $el = document.getElementById("city") as HTMLSelectElement
 
 		if (!$el) return
 
-		$el.value = city 
+		$el.value = city
 	}, [window])
 	useEffect(() => {
 		// Find the city object from all countries
@@ -179,12 +181,20 @@ export function Home() {
 			setWeatherCode(
 				weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
 			)
+			const temperatures = weatherData.hourly.temperature_2m.slice(0, 24)
+			// Filter out null or undefined values before calculating min/max
+			const validTemperatures = temperatures.filter((temp) => temp !== null && temp !== undefined) as number[];
+			const minTemp = Math.min(...validTemperatures)
+			const maxTemp = Math.max(...validTemperatures)
+			
+			setTemperatureRange([minTemp, maxTemp])
+			console.log(temperatureRange)
 		}
 	}, [weatherData])
 
 	return (
-		<main className="dark:bg-gray-950 bg-gray-100 text-black dark:text-white min-h-screen py-4 px-5">
-			<div className="container m-auto  rounded-2xl dark:bg-gray-700 bg-gray-200 px-5 py-10">
+		<main className="dark:bg-gray-950 bg-gray-100 text-black dark:text-white min-h-screen py-4 px-5 ">
+			<div className="w-full container m-auto rounded-2xl dark:bg-gray-700 bg-gray-200 px-5 py-10">
 				<div className="m-auto w-full text-center py-4">
 					<select
 						className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b bg-white/10 rounded p-2"
@@ -237,14 +247,16 @@ export function Home() {
 						))}
 					</select>
 				</div>
-				<Temperature 
-					data={weatherData}
-					code={weatherCode}
-				/>
-				<MoreCurrentData 
-					data={weatherData}
-					currentHour={currentHour}
-				/>
+				<Temperature data={weatherData} code={weatherCode} />
+				<section className=" mt-[80px] w-full text-center flex items-center justify-center gap-4">
+					<span className="flex flex-row items-center justify-center text-2xl gap-2 text-red-400 font-bold">
+						<TemperatureMaxIcon /> {temperatureRange[1]}ºC
+					</span>
+					<span className="flex flex-row items-center justify-center text-2xl gap-2 text-blue-400 font-bold">
+						<TemperatureMinIcon /> {temperatureRange[0]}ºC
+					</span>
+				</section>
+				<MoreCurrentData data={weatherData} currentHour={currentHour} />
 			</div>
 
 			<section className="w-full m-auto container">
@@ -262,16 +274,13 @@ export function Home() {
 					</select>
 				</h2>
 
-				<HourlyData 
+				<HourlyData
 					data={weatherData}
 					sliceHours={sliceHours}
 					updateSelectedHour={updateSelectedHour}
 				/>
 			</section>
-			<SelectedHourData 
-				data={weatherData}
-				selectedHour={selectedHour}
-			/>
+			<SelectedHourData data={weatherData} selectedHour={selectedHour} />
 			<section className="w-full m-auto container px-4 py-4 ">
 				<MapForecast />
 			</section>

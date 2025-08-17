@@ -10,7 +10,7 @@ import { WindIcon } from "../icons/wind-icon";
 export const SelectedHourData = ({ data, selectedHour }: { data: Weather | null, selectedHour: number }) => (
 	<section className="w-full m-auto container dark:bg-gray-700 bg-gray-200 dark:text-white grid grid-cols-2 gap-7 px-4 py-4 rounded-xl mt-4">
 		<article className="flex gap-2.5 items-center justify-center">
-			<TemperatureIcon />
+			<TemperatureIcon className="text-red-600" />
 			<div className="flex flex-col w-full">
 				<span className="text-slate-400">Temperatura</span>
 				<span>
@@ -19,7 +19,7 @@ export const SelectedHourData = ({ data, selectedHour }: { data: Weather | null,
 			</div>
 		</article>
 		<article className="flex gap-2.5 items-center justify-center">
-			<TemperatureIcon />
+			<TemperatureIcon className="text-red-600" />
 			<div className="flex flex-col w-full">
 				<span className="text-slate-400">Sensación térmica</span>
 				<span>
