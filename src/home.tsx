@@ -52,6 +52,11 @@ const CITIES: Record<string, CountryCities> = {
 				longitude: 2.125115,
 				name: "Sabadell",
 			},
+			calella: {
+				latitude: 41.6134853,
+				longitude: 2.652006,
+				name: "Calella",
+			},
 		},
 	},
 	Andorra: {
