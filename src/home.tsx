@@ -113,21 +113,32 @@ const CITIES: Record<string, CountryCities> = {
 type ForecastDay = "TODAY" | "TOMORROW" | "THIRD_DAY"
 
 function request_weather(lat: number, long: number) {
-	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&models=meteofrance_seamless&current=temperature_2m`
+	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&current=temperature_2m&timezone=Europe/Berlin&models=meteofrance_seamless`
 
 	return fetch(API_ENDPOINT)
 }
 
 export function Home() {
+	const currentHour = new Date().getHours()
+	const currentDay = new Date().getDay() - 1
 	const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
 	const [weatherData, setWeatherData] = useState<Weather | null>(null)
 	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
 	const [city, setCity] = useState(lastCity || "barcelona")
 	const [forecastDay, setForecastDay] = useState<ForecastDay>("TODAY")
-	const currentHour = new Date().getHours()
-	const [selectedHour, setSelectedHour] = useState(new Date().getHours())
+	const [selectedHour, setSelectedHour] = useState(currentHour)
 	const [sliceHours, setSliceHours] = useState([0, 24])
 	const [temperatureRange, setTemperatureRange] = useState<number[]>([0, 0])
+
+	const days = [
+		"Lunes",
+		"Martes",
+		"Miércoles",
+		"Jueves",
+		"Viernes",
+		"Sábado",
+		"Domingo",
+	]
 
 	function updateSelectedHour(hour: number) {
 		setSelectedHour(hour)
@@ -140,6 +151,7 @@ export function Home() {
 
 		$el.value = city
 	}, [window])
+
 	useEffect(() => {
 		// Find the city object from all countries
 		setLastCity(city)
@@ -187,13 +199,16 @@ export function Home() {
 				weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
 			)
 			const temperatures = weatherData.hourly.temperature_2m.slice(0, 24)
-			// Filter out null or undefined values before calculating min/max
-			const validTemperatures = temperatures.filter((temp) => temp !== null && temp !== undefined) as number[];
+			// Remove null or undefined values before calculating min/max
+
+			const validTemperatures = temperatures.filter(
+				(temp) => temp !== null && temp !== undefined,
+			) as number[]
+
 			const minTemp = Math.min(...validTemperatures)
 			const maxTemp = Math.max(...validTemperatures)
-			
+
 			setTemperatureRange([minTemp, maxTemp])
-			console.log(temperatureRange)
 		}
 	}, [weatherData])
 
