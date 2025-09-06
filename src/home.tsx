@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import { Weather, WeatherCodes } from "./types"
 import weatherCodes from "./weather-codes.ts"
@@ -120,7 +120,7 @@ function request_weather(lat: number, long: number) {
 
 export function Home() {
 	const currentHour = new Date().getHours()
-	const currentDay = new Date().getDay() - 1
+	// const currentDay = new Date().getDay() - 1
 	const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
 	const [weatherData, setWeatherData] = useState<Weather | null>(null)
 	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
@@ -130,7 +130,7 @@ export function Home() {
 	const [sliceHours, setSliceHours] = useState([0, 24])
 	const [temperatureRange, setTemperatureRange] = useState<number[]>([0, 0])
 
-	const days = [
+	/* const days = [
 		"Lunes",
 		"Martes",
 		"Miércoles",
@@ -138,7 +138,7 @@ export function Home() {
 		"Viernes",
 		"Sábado",
 		"Domingo",
-	]
+	] */
 
 	function updateSelectedHour(hour: number) {
 		setSelectedHour(hour)
@@ -173,8 +173,6 @@ export function Home() {
 					console.error("Error fetching weather data:", error)
 				})
 		}
-
-		// Wait for DOM to be ready before attaching event listener
 	}, [city])
 	useEffect(() => {
 		if (forecastDay === "TODAY") {
