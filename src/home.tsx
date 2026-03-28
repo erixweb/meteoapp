@@ -113,7 +113,7 @@ const CITIES: Record<string, CountryCities> = {
 type ForecastDay = "TODAY" | "TOMORROW" | "THIRD_DAY"
 
 function request_weather(lat: number, long: number) {
-	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&current=temperature_2m&timezone=Europe/Berlin&models=meteofrance_seamless`
+	const API_ENDPOINT = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&hourly=temperature_2m,apparent_temperature,precipitation,relative_humidity_2m,weather_code,cloud_cover,wind_speed_10m,surface_pressure,wind_direction_10m&current=temperature_2m&timezone=Europe/Berlin`
 
 	return fetch(API_ENDPOINT)
 }
@@ -277,19 +277,18 @@ export function Home() {
 				<MoreCurrentData data={weatherData} currentHour={currentHour} />
 			</div>
 
-			<section className="w-full m-auto container">
+			<section className="w-full m-auto container py-5">
+				<div className="flex w-full max-w-[450px] rounded-xl bg-blue-500">
+					<DateSelector forecastDay={"TODAY"} setForecastDay={setForecastDay}>Hoy</DateSelector>
+					<DateSelector forecastDay={"TOMORROW"} setForecastDay={setForecastDay}>Mañana</DateSelector>
+					<DateSelector forecastDay={"THIRD_DAY"} setForecastDay={setForecastDay}>Pasado mañana</DateSelector>
+				</div>
 				<h2 className="text-xl font-bold py-2">
-					<select
-						className="text-xl font-bold   rounded p-2"
-						value={forecastDay}
-						onChange={(e) =>
-							setForecastDay(e.target.value as ForecastDay)
-						}
-					>
-						<option value="TODAY">Hoy</option>
-						<option value="TOMORROW">Mañana</option>
-						<option value="THIRD_DAY">Pasado mañana</option>
-					</select>
+					{forecastDay === "TODAY"
+						? "Hoy"
+						: forecastDay === "TOMORROW"
+						? "Mañana"
+						: "Pasado mañana"}
 				</h2>
 
 				<HourlyData
@@ -303,5 +302,11 @@ export function Home() {
 				<MapForecast />
 			</section>
 		</main>
+	)
+}
+
+function DateSelector({forecastDay, setForecastDay, children}: {forecastDay: ForecastDay, setForecastDay: (forecastDay: ForecastDay) => void, children: string}){
+	return (
+		<button onClick={() => setForecastDay(forecastDay)} className="px-3 py-3 font-black cursor-pointer hover:bg-blue-600 w-full rounded-xl hover:scale-125 scale-100 transition-all duration-150 hover:z-50">{children}</button>
 	)
 }

@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { formatHour } from "../utils/time"
 
 export function MapForecast() {
 	const [hour, setHour] = useState(1)
@@ -7,7 +8,7 @@ export function MapForecast() {
 	const month = (date.getMonth() + 1).toString().padStart(2, "0")
 	const day = date.getDate().toString().padStart(2, "0")
 
-	const folderName = `${year}${month}${day}00`
+	const folderName = `${year}${month}${day}06`
 
 	return (
 		<div className="flex flex-wrap justify-center w-full max-w-[100vh] mx-auto relative">
@@ -23,9 +24,7 @@ export function MapForecast() {
 			/>
 
 			<div className="w-full absolute bottom-0 left-0 p-4">
-				<span>
-					{hour}
-				</span>
+				<span className="text-black">{formatHour(hour, "06Z")}</span>
 				<input
 					type="range"
 					min={1}
