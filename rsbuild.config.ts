@@ -3,7 +3,9 @@ import { pluginReact } from "@rsbuild/plugin-react"
 import { GenerateSW, InjectManifest } from "@aaroon/workbox-rspack-plugin"
 
 export default defineConfig({
-	plugins: [pluginReact()],
+	plugins: [pluginReact({
+		reactCompiler: true,
+	})],
 	output: {
 		assetPrefix: "/",
 		filename: {

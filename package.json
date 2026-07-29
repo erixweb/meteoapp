@@ -13,27 +13,17 @@
 		"react-dom": "19.2.4"
 	},
 	"devDependencies": {
-		"@eslint/compat": "2.0.3",
-		"@eslint/js": "10.0.1",
-		"@rsbuild/core": "1.7.4",
-		"@rsbuild/plugin-react": "1.4.6",
-		"@tailwindcss/postcss": "4.2.2",
+		"@rsbuild/core": "^2.1.9",
+		"@rsbuild/plugin-react": "2.1.0",
+		"@tailwindcss/postcss": "4.3.3",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
-		"autoprefixer": "10.4.27",
-		"eslint": "10.1.0",
-		"eslint-plugin-react": "7.37.5",
-		"eslint-plugin-react-hooks": "^7.0.1",
+		"autoprefixer": "10.5.4",
 		"globals": "17.4.0",
-		"postcss": "8.5.8",
+		"postcss": "^8.5.25",
 		"postcss-loader": "8.2.1",
-		"prettier": "3.8.1",
-		"standard": "17.1.2",
-		"tailwindcss": "4.2.2",
-		"typescript": "^5.9.2"
-	},
-	"eslintConfig": {
-		"extends": "./node_modules/standard/eslintrc.json"
+		"tailwindcss": "4.3.3",
+		"typescript": "7.0.2"
 	},
 	"module": "src/index.tsx",
 	"type": "module"

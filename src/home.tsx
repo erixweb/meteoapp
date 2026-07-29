@@ -279,16 +279,31 @@ export function Home() {
 
 			<section className="w-full m-auto container py-5">
 				<div className="flex w-full max-w-[450px] rounded-xl bg-blue-500">
-					<DateSelector forecastDay={"TODAY"} setForecastDay={setForecastDay}>Hoy</DateSelector>
-					<DateSelector forecastDay={"TOMORROW"} setForecastDay={setForecastDay}>Mañana</DateSelector>
-					<DateSelector forecastDay={"THIRD_DAY"} setForecastDay={setForecastDay}>Pasado mañana</DateSelector>
+					<DateSelector
+						forecastDay={"TODAY"}
+						setForecastDay={setForecastDay}
+					>
+						Hoy
+					</DateSelector>
+					<DateSelector
+						forecastDay={"TOMORROW"}
+						setForecastDay={setForecastDay}
+					>
+						Mañana
+					</DateSelector>
+					<DateSelector
+						forecastDay={"THIRD_DAY"}
+						setForecastDay={setForecastDay}
+					>
+						Pasado mañana
+					</DateSelector>
 				</div>
 				<h2 className="text-xl font-bold py-2">
 					{forecastDay === "TODAY"
 						? "Hoy"
 						: forecastDay === "TOMORROW"
-						? "Mañana"
-						: "Pasado mañana"}
+							? "Mañana"
+							: "Pasado mañana"}
 				</h2>
 
 				<HourlyData
@@ -305,8 +320,21 @@ export function Home() {
 	)
 }
 
-function DateSelector({forecastDay, setForecastDay, children}: {forecastDay: ForecastDay, setForecastDay: (forecastDay: ForecastDay) => void, children: string}){
+function DateSelector({
+	forecastDay,
+	setForecastDay,
+	children,
+}: {
+	forecastDay: ForecastDay
+	setForecastDay: (forecastDay: ForecastDay) => void
+	children: string
+}) {
 	return (
-		<button onClick={() => setForecastDay(forecastDay)} className="px-3 py-3 font-black cursor-pointer hover:bg-blue-600 w-full rounded-xl hover:scale-125 scale-100 transition-all duration-150 hover:z-50">{children}</button>
+		<button
+			onClick={() => setForecastDay(forecastDay)}
+			className="px-3 py-3 font-black cursor-pointer hover:bg-blue-600 w-full rounded-xl hover:scale-125 scale-100 transition-all duration-150 hover:z-50"
+		>
+			{children}
+		</button>
 	)
 }

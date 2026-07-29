@@ -1,18 +1,17 @@
 function formatHour(hour: number, run: string) {
-    const RUN_HOUR = parseInt(run)
-    
-    const currentDate = new Date()
+	const RUN_HOUR = parseInt(run)
 
-    currentDate.setUTCHours(RUN_HOUR + hour, 0, 0, 0)
-    
+	const currentDate = new Date()
 
-    return currentDate.toLocaleString("es-ES", {
-        day: "2-digit",
-        month: "long",
-        hour: "2-digit",
-        minute: "2-digit",
-        weekday: "long",
-    })
+	currentDate.setUTCHours(RUN_HOUR + hour, 0, 0, 0)
+
+	return currentDate.toLocaleString("es-ES", {
+		day: "2-digit",
+		month: "long",
+		hour: "2-digit",
+		minute: "2-digit",
+		weekday: "long",
+	})
 }
 
 export { formatHour }

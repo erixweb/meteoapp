@@ -1,7 +1,15 @@
 import { Weather } from "../../types"
 import weatherCodes from "../../weather-codes"
 
-export const HourlyData = ({ data, sliceHours, updateSelectedHour }: { data: Weather | null, sliceHours: number[], updateSelectedHour: (hour: number) => void }) => (
+export const HourlyData = ({
+	data,
+	sliceHours,
+	updateSelectedHour,
+}: {
+	data: Weather | null
+	sliceHours: number[]
+	updateSelectedHour: (hour: number) => void
+}) => (
 	<div>
 		{data ? (
 			<div className="flex gap-4 overflow-x-scroll forecast py-2 dark:text-white text-black">
@@ -27,19 +35,16 @@ export const HourlyData = ({ data, sliceHours, updateSelectedHour }: { data: Wea
 									<img
 										src={
 											weatherCodes()[
-												data?.hourly
-													?.weather_code[realIndex]
+												data?.hourly?.weather_code[
+													realIndex
+												]
 											].day.image
 										}
 										className="w-16 h-16"
 									/>
 								</p>
 								<p className="text-center text-xl text-indigo-600 font-bold">
-									{
-										data.hourly.temperature_2m[
-											realIndex
-										]
-									}
+									{data.hourly.temperature_2m[realIndex]}
 									ºC
 								</p>
 								<p className="text-center">
@@ -51,12 +56,7 @@ export const HourlyData = ({ data, sliceHours, updateSelectedHour }: { data: Wea
 									%
 								</p>
 								<p className="text-center">
-									{
-										data.hourly.wind_speed_10m[
-											realIndex
-										]
-									}{" "}
-									km/h
+									{data.hourly.wind_speed_10m[realIndex]} km/h
 								</p>
 							</div>
 						)
