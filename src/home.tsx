@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import "./App.css"
 import { Weather, WeatherCodes } from "./types"
 import weatherCodes from "./weather-codes.ts"
@@ -118,204 +118,229 @@ function request_weather(lat: number, long: number) {
 	return fetch(API_ENDPOINT)
 }
 
-export function Home() {
-	const currentHour = new Date().getHours()
-	// const currentDay = new Date().getDay() - 1
-	const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
-	const [weatherData, setWeatherData] = useState<Weather | null>(null)
-	const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
-	const [city, setCity] = useState(lastCity || "barcelona")
-	const [forecastDay, setForecastDay] = useState<ForecastDay>("TODAY")
-	const [selectedHour, setSelectedHour] = useState(currentHour)
-	const [sliceHours, setSliceHours] = useState([0, 24])
-	const [temperatureRange, setTemperatureRange] = useState<number[]>([0, 0])
+	export function Home() {
+		const currentHour = new Date().getHours()
+		// const currentDay = new Date().getDay() - 1
+		const [lastCity, setLastCity] = useLocalStorage("lastCity", "barcelona")
+		const [weatherData, setWeatherData] = useState<Weather | null>(null)
+		const [weatherCode, setWeatherCode] = useState<WeatherCodes | null>(null)
+		const [city, setCity] = useState(lastCity || "barcelona")
+		const [forecastDay, setForecastDay] = useState<ForecastDay>("TODAY")
+		const [selectedHour, setSelectedHour] = useState(currentHour)
+		const [sliceHours, setSliceHours] = useState([0, 24])
+		const [temperatureRange, setTemperatureRange] = useState<number[]>([0, 0])
+		const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+		const dropdownRef = useRef<HTMLDivElement>(null)
+	
+		/* const days = [
+			"Lunes",
+			"Martes",
+			"Miércoles",
+			"Jueves",
+			"Viernes",
+			"Sábado",
+			"Domingo",
+		] */
+	
+		function updateSelectedHour(hour: number) {
+			setSelectedHour(hour)
+		}
+	
+		useEffect(() => {
+			const handleClickOutside = (event: MouseEvent) => {
+				if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+					setIsDropdownOpen(false)
+				}
+			}
+			document.addEventListener("mousedown", handleClickOutside)
+			return () => document.removeEventListener("mousedown", handleClickOutside)
+		}, [])
+	
+		useEffect(() => {
+			// Find the city object from all countries
+			setLastCity(city)
+			let selectedCityObj: City | undefined
+			for (const country of Object.keys(CITIES)) {
+				if (CITIES[country].cities[city]) {
+					selectedCityObj = CITIES[country].cities[city]
+					break
+				}
+			}
+			if (selectedCityObj) {
+				request_weather(selectedCityObj.latitude, selectedCityObj.longitude)
+					.then((response) => {
+						response.json().then((data) => {
+							setWeatherData(data)
+						})
+					})
+					.catch((error) => {
+						console.error("Error fetching weather data:", error)
+					})
+			}
+		}, [city])
+		useEffect(() => {
+			if (forecastDay === "TODAY") {
+				setSliceHours([0, 24])
+			} else if (forecastDay === "TOMORROW") {
+				setSliceHours([24, 48])
+			} else if (forecastDay === "THIRD_DAY") {
+				setSliceHours([48, 72])
+			}
+		}, [forecastDay])
+	
+		const forecast = document.querySelector(".forecast")
+	
+		if (forecast) {
+			// @ts-ignore
+			forecast.addEventListener("wheel", handleWheelScroll)
+		}
+	
+		useEffect(() => {
+			if (weatherData !== null && weatherData !== undefined) {
+				setWeatherCode(
+					weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
+				)
+				const temperatures = weatherData.hourly.temperature_2m.slice(0, 24)
+				// Remove null or undefined values before calculating min/max
+	
+				const validTemperatures = temperatures.filter(
+					(temp) => temp !== null && temp !== undefined,
+				) as number[]
+	
+				const minTemp = Math.min(...validTemperatures)
+				const maxTemp = Math.max(...validTemperatures)
+	
+				setTemperatureRange([minTemp, maxTemp])
+			}
+		}, [weatherData])
 
-	/* const days = [
-		"Lunes",
-		"Martes",
-		"Miércoles",
-		"Jueves",
-		"Viernes",
-		"Sábado",
-		"Domingo",
-	] */
-
-	function updateSelectedHour(hour: number) {
-		setSelectedHour(hour)
-	}
-
-	useEffect(() => {
-		const $el = document.getElementById("city") as HTMLSelectElement
-
-		if (!$el) return
-
-		$el.value = city
-	}, [window])
-
-	useEffect(() => {
-		// Find the city object from all countries
-		setLastCity(city)
-		let selectedCityObj: City | undefined
-		for (const country of Object.keys(CITIES)) {
-			if (CITIES[country].cities[city]) {
-				selectedCityObj = CITIES[country].cities[city]
+		let currentCityName = "Seleccionando..."
+		for (const country of Object.values(CITIES)) {
+			if (country.cities[city]) {
+				currentCityName = country.cities[city].name
 				break
 			}
 		}
-		if (selectedCityObj) {
-			request_weather(selectedCityObj.latitude, selectedCityObj.longitude)
-				.then((response) => {
-					response.json().then((data) => {
-						setWeatherData(data)
-					})
-				})
-				.catch((error) => {
-					console.error("Error fetching weather data:", error)
-				})
-		}
-	}, [city])
-	useEffect(() => {
-		if (forecastDay === "TODAY") {
-			setSliceHours([0, 24])
-		} else if (forecastDay === "TOMORROW") {
-			setSliceHours([24, 48])
-		} else if (forecastDay === "THIRD_DAY") {
-			setSliceHours([48, 72])
-		}
-	}, [forecastDay])
+	
+		return (
+			<main className="dark:bg-slate-950 bg-slate-50 text-slate-900 dark:text-slate-100 min-h-screen py-6 px-4 transition-colors duration-500">
+				<div className="max-w-4xl mx-auto space-y-8">
+				<header className="flex flex-col md:flex-row items-center justify-between gap-6">
+					<div className="relative group w-full md:w-72" ref={dropdownRef}>
+						<button 
+							onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+							className="w-full flex items-center justify-between pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all cursor-pointer font-medium shadow-sm"
+						>
+							<div className="flex items-center gap-3 truncate">
+								<span className="text-slate-400">📍</span>
+								<span className="truncate">{currentCityName}</span>
+							</div>
+							<span className={`text-slate-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>▾</span>
+						</button>
 
-	const forecast = document.querySelector(".forecast")
+						{isDropdownOpen && (
+							<div className="absolute z-50 w-full mt-2 bg-black rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 max-h-80 overflow-y-auto py-2 custom-scrollbar">
+								{Object.entries(CITIES).map(([country, data]) => (
+									<div key={country} className="mb-2">
+										<div className="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+											<span className={`w-4 h-3 rounded-sm fi fi-${data.flag}`}></span>
+											{country}
+										</div>
+										<div className="px-2">
+											{Object.entries(data.cities).map(([cityKey, cityObj]) => (
+												<div
+													key={cityKey}
+													onClick={() => {
+														setCity(cityKey)
+														setIsDropdownOpen(false)
+													}}
+													className={`px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium ${
+														city === cityKey 
+															? "bg-blue-500 text-white" 
+															: "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+													}`}
+												>
+													{cityObj.name}
+												</div>
+											))}
+										</div>
+									</div>
+								))}
+							</div>
+						)}
+					</div>
+					<div className="text-right hidden md:block">
+						<p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Hora Local</p>
+						<p className="text-lg font-bold">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+					</div>
+				</header>
 
-	if (forecast) {
-		// @ts-ignore
-		forecast.addEventListener("wheel", handleWheelScroll)
-	}
+				<div className="glass rounded-3xl p-8 shadow-xl border border-white/20 dark:border-white/10">
+					<Temperature data={weatherData} code={weatherCode} />
+					
+					<div className="flex flex-wrap justify-center gap-6 mt-12">
+						<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold transition-transform hover:scale-105">
+							<TemperatureMaxIcon /> {temperatureRange[1]}ºC
+						</div>
+						<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold transition-transform hover:scale-105">
+							<TemperatureMinIcon /> {temperatureRange[0]}ºC
+						</div>
+					</div>
+					
+					<div className="mt-10">
+						<MoreCurrentData data={weatherData} currentHour={currentHour} />
+					</div>
+				</div>
 
-	useEffect(() => {
-		if (weatherData !== null && weatherData !== undefined) {
-			setWeatherCode(
-				weatherCodes()[weatherData?.hourly?.weather_code[1]].day,
-			)
-			const temperatures = weatherData.hourly.temperature_2m.slice(0, 24)
-			// Remove null or undefined values before calculating min/max
-
-			const validTemperatures = temperatures.filter(
-				(temp) => temp !== null && temp !== undefined,
-			) as number[]
-
-			const minTemp = Math.min(...validTemperatures)
-			const maxTemp = Math.max(...validTemperatures)
-
-			setTemperatureRange([minTemp, maxTemp])
-		}
-	}, [weatherData])
-
-	return (
-		<main className="dark:bg-gray-950 bg-gray-100 text-black dark:text-white min-h-screen py-4 px-5 ">
-			<div className="w-full container m-auto rounded-2xl dark:bg-gray-700 bg-gray-200 px-5 py-10">
-				<div className="m-auto w-full text-center py-4">
-					<select
-						className="text-2xl font-bold from-blue-500 to-blue-700 text-transparent bg-clip-text bg-gradient-to-b bg-white/10 rounded p-2"
-						id="city"
-						onChange={() => {
-							const selectedCity = (
-								document.getElementById(
-									"city",
-								) as HTMLSelectElement
-							).value
-							setCity(selectedCity)
-						}}
-					>
-						{Object.entries(CITIES).map(([country, cities]) => (
-							<optgroup
-								key={country}
-								label=""
-								className="font-medium text-start ml-0 w-full px-4"
-								style={{ paddingLeft: 0 }}
+				<section className="space-y-6">
+					<div className="flex items-center justify-between">
+						<h2 className="text-2xl font-bold tracking-tight">
+							{forecastDay === "TODAY"
+								? "Hoy"
+								: forecastDay === "TOMORROW"
+									? "Mañana"
+									: "Pasado Mañana"}
+						</h2>
+						<div className="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
+							<DateSelector
+								forecastDay={"TODAY"}
+								setForecastDay={setForecastDay}
+								active={forecastDay === "TODAY"}
 							>
-								<div className="flex pl-4">
-									<span
-										className={`w-fit rounded-sm fi fi-${cities.flag}`}
-									></span>
-									<option
-										disabled
-										className="bg-transparent text-blue-400 font-semibold text-left my-2"
-										style={{
-											cursor: "default",
-											border: "none",
-											background: "none",
-											paddingLeft: "8px",
-										}}
-									>
-										{country}
-									</option>
-								</div>
-								{Object.entries(cities.cities).map(
-									([cityKey, cityObj]) => (
-										<option
-											key={cityKey}
-											value={cityKey}
-											className="py-1 font-bold px-4"
-										>
-											{cityObj.name}
-										</option>
-									),
-								)}
-							</optgroup>
-						))}
-					</select>
-				</div>
-				<Temperature data={weatherData} code={weatherCode} />
-				<section className=" mt-[80px] w-full text-center flex items-center justify-center gap-4">
-					<span className="flex flex-row items-center justify-center text-2xl gap-2 text-red-400 font-bold">
-						<TemperatureMaxIcon /> {temperatureRange[1]}ºC
-					</span>
-					<span className="flex flex-row items-center justify-center text-2xl gap-2 text-blue-400 font-bold">
-						<TemperatureMinIcon /> {temperatureRange[0]}ºC
-					</span>
+								Hoy
+							</DateSelector>
+							<DateSelector
+								forecastDay={"TOMORROW"}
+								setForecastDay={setForecastDay}
+								active={forecastDay === "TOMORROW"}
+							>
+								Mañana
+							</DateSelector>
+							<DateSelector
+								forecastDay={"THIRD_DAY"}
+								setForecastDay={setForecastDay}
+								active={forecastDay === "THIRD_DAY"}
+							>
+								Pasado Mañana
+							</DateSelector>
+						</div>
+					</div>
+
+					<HourlyData
+						data={weatherData}
+						sliceHours={sliceHours}
+						updateSelectedHour={updateSelectedHour}
+					/>
 				</section>
-				<MoreCurrentData data={weatherData} currentHour={currentHour} />
+
+				<SelectedHourData data={weatherData} selectedHour={selectedHour} />
+				
+				<section className="w-full py-6">
+					<div className="glass rounded-3xl p-4 shadow-lg border border-white/20 dark:border-white/10">
+						<MapForecast />
+					</div>
+				</section>
 			</div>
-
-			<section className="w-full m-auto container py-5">
-				<div className="flex w-full max-w-[450px] rounded-xl bg-blue-500">
-					<DateSelector
-						forecastDay={"TODAY"}
-						setForecastDay={setForecastDay}
-					>
-						Hoy
-					</DateSelector>
-					<DateSelector
-						forecastDay={"TOMORROW"}
-						setForecastDay={setForecastDay}
-					>
-						Mañana
-					</DateSelector>
-					<DateSelector
-						forecastDay={"THIRD_DAY"}
-						setForecastDay={setForecastDay}
-					>
-						Pasado mañana
-					</DateSelector>
-				</div>
-				<h2 className="text-xl font-bold py-2">
-					{forecastDay === "TODAY"
-						? "Hoy"
-						: forecastDay === "TOMORROW"
-							? "Mañana"
-							: "Pasado mañana"}
-				</h2>
-
-				<HourlyData
-					data={weatherData}
-					sliceHours={sliceHours}
-					updateSelectedHour={updateSelectedHour}
-				/>
-			</section>
-			<SelectedHourData data={weatherData} selectedHour={selectedHour} />
-			<section className="w-full m-auto container px-4 py-4 ">
-				<MapForecast />
-			</section>
 		</main>
 	)
 }
@@ -324,15 +349,21 @@ function DateSelector({
 	forecastDay,
 	setForecastDay,
 	children,
+	active,
 }: {
 	forecastDay: ForecastDay
 	setForecastDay: (forecastDay: ForecastDay) => void
 	children: string
+	active: boolean
 }) {
 	return (
 		<button
 			onClick={() => setForecastDay(forecastDay)}
-			className="px-3 py-3 font-black cursor-pointer hover:bg-blue-600 w-full rounded-xl hover:scale-125 scale-100 transition-all duration-150 hover:z-50"
+			className={`px-4 py-2 text-sm font-bold rounded-lg transition-all duration-200 ${
+				active 
+					? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-sm" 
+					: "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+			}`}
 		>
 			{children}
 		</button>

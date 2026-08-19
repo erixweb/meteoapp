@@ -14,63 +14,57 @@ export const SelectedHourData = ({
 	data: Weather | null
 	selectedHour: number
 }) => (
-	<section className="w-full m-auto container dark:bg-gray-700 bg-gray-200 dark:text-white grid grid-cols-2 gap-7 px-4 py-4 rounded-xl mt-4">
-		<article className="flex gap-2.5 items-center justify-center">
-			<TemperatureIcon className="text-red-600" />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Temperatura</span>
-				<span>{data?.hourly.temperature_2m[selectedHour]}ºC</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<TemperatureIcon className="text-red-600" />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Sensación térmica</span>
-				<span>
-					{data?.hourly.apparent_temperature[selectedHour]}
-					ºC
-				</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<WindIcon />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Velocidad del viento</span>
-				<span>
-					{data?.hourly.wind_speed_10m[selectedHour]} km/h{" "}
-					{degreesToDirection(
-						data?.hourly.wind_direction_10m[selectedHour],
-					)}
-				</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<UmbrellaIcon />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Precipitación</span>
-				<span>{data?.hourly.precipitation[selectedHour]} mm</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<DropletIcon />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Humedad</span>
-				<span>{data?.hourly.relative_humidity_2m[selectedHour]}%</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<CompassIcon />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Presión</span>
-				<span>{data?.hourly.surface_pressure[selectedHour]} hPa</span>
-			</div>
-		</article>
-		<article className="flex gap-2.5 items-center justify-center">
-			<CloudIcon />
-			<div className="flex flex-col w-full">
-				<span className="text-slate-400">Nubosidad</span>
-				<span>{data?.hourly.cloud_cover[selectedHour]}%</span>
-			</div>
-		</article>
+	<section className="w-full m-auto container glass grid grid-cols-2 md:grid-cols-4 gap-4 px-6 py-6 rounded-3xl mt-8 shadow-lg border border-white/10">
+		{[
+			{
+				icon: <TemperatureIcon className="text-red-500" />,
+				label: "Temperatura",
+				value: `${data?.hourly.temperature_2m[selectedHour]}ºC`,
+			},
+			{
+				icon: <TemperatureIcon className="text-orange-500" />,
+				label: "Sensación Térmica",
+				value: `${data?.hourly.apparent_temperature[selectedHour]}ºC`,
+			},
+			{
+				icon: <WindIcon className="text-blue-500" />,
+				label: "Velocidad del Viento",
+				value: `${data?.hourly.wind_speed_10m[selectedHour]} km/h ${degreesToDirection(
+					data?.hourly.wind_direction_10m[selectedHour],
+				)}`,
+			},
+			{
+				icon: <UmbrellaIcon className="text-cyan-500" />,
+				label: "Precipitación",
+				value: `${data?.hourly.precipitation[selectedHour]} mm`,
+			},
+			{
+				icon: <DropletIcon className="text-indigo-500" />,
+				label: "Humedad",
+				value: `${data?.hourly.relative_humidity_2m[selectedHour]}%`,
+			},
+			{
+				icon: <CompassIcon className="text-slate-500" />,
+				label: "Presión",
+				value: `${data?.hourly.surface_pressure[selectedHour]} hPa`,
+			},
+			{
+				icon: <CloudIcon className="text-gray-500" />,
+				label: "Nubosidad",
+				value: `${data?.hourly.cloud_cover[selectedHour]}%`,
+			},
+		].map((item, idx) => (
+			<article key={idx} className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 dark:bg-black/20 border border-white/5">
+				<div className="p-2 bg-white/10 rounded-lg">
+					{item.icon}
+				</div>
+				<div className="flex flex-col overflow-hidden">
+					<span className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
+						{item.label}
+					</span>
+					<span className="font-bold truncate">{item.value}</span>
+				</div>
+			</article>
+		))}
 	</section>
 )

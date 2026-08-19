@@ -12,7 +12,7 @@ export const HourlyData = ({
 }) => (
 	<div>
 		{data ? (
-			<div className="flex gap-4 overflow-x-scroll forecast py-2 dark:text-white text-black">
+			<div className="flex gap-4 overflow-x-auto forecast-scroll py-4 dark:text-white text-black snap-x">
 				{data.hourly.time
 					.slice(sliceHours[0], sliceHours[1])
 					.map((time, idx) => {
@@ -20,18 +20,18 @@ export const HourlyData = ({
 						return (
 							<div
 								key={realIndex}
-								className=" dark:bg-gray-700 bg-gray-200 p-4 rounded-[16px] shadow-md min-w-26 w-full"
+								className="glass p-4 rounded-2xl shadow-sm min-w-[110px] flex flex-col items-center justify-between gap-3 cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95 snap-start border border-white/10"
 								onClick={() => {
 									updateSelectedHour(realIndex)
 								}}
 							>
-								<h3 className="text-lg font-semibold text-center">
+								<h3 className="text-sm font-bold text-slate-500 dark:text-slate-400">
 									{new Date(time).toLocaleTimeString([], {
 										hour: "2-digit",
 										minute: "2-digit",
 									})}
 								</h3>
-								<p className="flex items-center justify-center py-2">
+								<div className="relative">
 									<img
 										src={
 											weatherCodes()[
@@ -40,30 +40,29 @@ export const HourlyData = ({
 												]
 											].day.image
 										}
-										className="w-16 h-16"
+										className="w-12 h-12 object-contain"
 									/>
-								</p>
-								<p className="text-center text-xl text-indigo-600 font-bold">
-									{data.hourly.temperature_2m[realIndex]}
-									ºC
-								</p>
-								<p className="text-center">
-									{
-										data.hourly.relative_humidity_2m[
-											realIndex
-										]
-									}
-									%
-								</p>
-								<p className="text-center">
-									{data.hourly.wind_speed_10m[realIndex]} km/h
-								</p>
+								</div>
+								<div className="flex flex-col items-center gap-1">
+									<p className="text-lg font-black text-blue-600 dark:text-blue-400">
+										{data.hourly.temperature_2m[realIndex]}º
+									</p>
+									<p className="text-xs text-slate-400 font-medium">
+										{
+											data.hourly.relative_humidity_2m[
+												realIndex
+											]
+										}%
+									</p>
+								</div>
 							</div>
 						)
 					})}
 			</div>
 		) : (
-			<p>Loading forecast data...</p>
+			<div className="flex items-center justify-center py-12">
+				<p className="text-slate-500 animate-pulse">Cargando pronóstico...</p>
+			</div>
 		)}
 	</div>
 )
