@@ -1,16 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { formatHour } from "../utils/time"
 
 export type Regions = "catalonia" | "spain"
 
 export function MapForecast({ region }: { region: Regions }) {
-	const [hour, setHour] = useState(1)
+  const [hour, setHour] = useState(1)
 	const date = new Date()
 	const year = date.getFullYear()
 	const month = (date.getMonth() + 1).toString().padStart(2, "0")
 	const day = date.getDate().toString().padStart(2, "0")
 	const folderName = `${year}${month}${day}06`
 
+  useEffect(() => {
+    setHour(1)
+  }, [region])
 	const isSpain = region === "spain"
 	const maxHour = isSpain ? 36 : 51
 
@@ -42,7 +45,8 @@ export function MapForecast({ region }: { region: Regions }) {
 				<input
 					type="range"
 					min={1}
-					max={maxHour}
+          max={maxHour}
+          value={hour}
 					className="w-full"
 					onChange={(e) => setHour(parseInt(e.target.value))}
 					defaultValue={1}
