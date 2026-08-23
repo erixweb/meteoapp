@@ -224,126 +224,129 @@ function request_weather(lat: number, long: number) {
 	
 		return (
 			<main className="dark:bg-slate-950 bg-slate-50 text-slate-900 dark:text-slate-100 min-h-screen py-6 px-4 transition-colors duration-500">
-				<div className="max-w-4xl mx-auto space-y-8">
-				<header className="flex flex-col md:flex-row items-center justify-between gap-6">
-					<div className="relative group w-full md:w-72" ref={dropdownRef}>
-						<button 
-							onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-							className="w-full flex items-center justify-between pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all cursor-pointer font-medium shadow-sm"
-						>
-							<div className="flex items-center gap-3 truncate">
-								<span className="text-slate-400">📍</span>
-								<span className="truncate">{currentCityName}</span>
-							</div>
-							<span className={`text-slate-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>▾</span>
-						</button>
+					<div className="max-w-4xl mx-auto space-y-8">
+					<header className="flex flex-col md:flex-row items-center justify-between gap-6">
+						<div className="relative group w-full md:w-72" ref={dropdownRef}>
+							<button 
+								onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+								className="w-full flex items-center justify-between pl-10 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all cursor-pointer font-medium shadow-sm"
+							>
+								<div className="flex items-center gap-3 truncate">
+									<span className="text-slate-400">📍</span>
+									<span className="truncate">{currentCityName}</span>
+								</div>
+								<span className={`text-slate-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}>▾</span>
+							</button>
 
-						{isDropdownOpen && (
-							<div className="absolute z-50 w-full mt-2 bg-black rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 max-h-80 overflow-y-auto py-2 custom-scrollbar">
-								{Object.entries(CITIES).map(([country, data]) => (
-									<div key={country} className="mb-2">
-										<div className="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
-											<span className={`w-4 h-3 rounded-sm fi fi-${data.flag}`}></span>
-											{country}
+							{isDropdownOpen && (
+								<div className="absolute z-50 w-full mt-2 dark:bg-black bg-white rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 max-h-80 overflow-y-auto py-2 custom-scrollbar">
+									{Object.entries(CITIES).map(([country, data]) => (
+										<div key={country} className="mb-2">
+											<div className="px-4 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+												<span className={`w-4 h-3 rounded-sm fi fi-${data.flag}`}></span>
+												{country}
+											</div>
+											<div className="px-2">
+												{Object.entries(data.cities).map(([cityKey, cityObj]) => (
+													<div
+														key={cityKey}
+														onClick={() => {
+															setCity(cityKey)
+															setIsDropdownOpen(false)
+														}}
+														className={`px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium ${
+															city === cityKey 
+																? "bg-blue-500 text-white" 
+																: "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+														}`}
+													>
+														{cityObj.name}
+													</div>
+												))}
+											</div>
 										</div>
-										<div className="px-2">
-											{Object.entries(data.cities).map(([cityKey, cityObj]) => (
-												<div
-													key={cityKey}
-													onClick={() => {
-														setCity(cityKey)
-														setIsDropdownOpen(false)
-													}}
-													className={`px-4 py-2 rounded-xl cursor-pointer transition-colors text-sm font-medium ${
-														city === cityKey 
-															? "bg-blue-500 text-white" 
-															: "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
-													}`}
-												>
-													{cityObj.name}
-												</div>
-											))}
-										</div>
-									</div>
-								))}
+									))}
+								</div>
+							)}
+						</div>
+						<div className="text-right hidden md:block">
+							<p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Hora Local</p>
+							<p className="text-lg font-bold">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+						</div>
+					</header>
+
+					<div className="glass rounded-3xl p-8 shadow-xl border border-white/20 dark:border-white/10">
+						<Temperature data={weatherData} code={weatherCode} />
+					
+						<div className="flex flex-wrap justify-center gap-6 mt-12">
+							<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold transition-transform hover:scale-105">
+								<TemperatureMaxIcon /> {temperatureRange[1]}ºC
 							</div>
-						)}
-					</div>
-					<div className="text-right hidden md:block">
-						<p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Hora Local</p>
-						<p className="text-lg font-bold">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-					</div>
-				</header>
-
-				<div className="glass rounded-3xl p-8 shadow-xl border border-white/20 dark:border-white/10">
-					<Temperature data={weatherData} code={weatherCode} />
+							<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold transition-transform hover:scale-105">
+								<TemperatureMinIcon /> {temperatureRange[0]}ºC
+							</div>
+						</div>
 					
-					<div className="flex flex-wrap justify-center gap-6 mt-12">
-						<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold transition-transform hover:scale-105">
-							<TemperatureMaxIcon /> {temperatureRange[1]}ºC
-						</div>
-						<div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold transition-transform hover:scale-105">
-							<TemperatureMinIcon /> {temperatureRange[0]}ºC
-						</div>
-					</div>
-					
-					<div className="mt-10">
-						<MoreCurrentData data={weatherData} currentHour={currentHour} />
-					</div>
-				</div>
-
-				<section className="space-y-6">
-					<div className="flex items-center justify-between">
-						<h2 className="text-2xl font-bold tracking-tight">
-							{forecastDay === "TODAY"
-								? "Hoy"
-								: forecastDay === "TOMORROW"
-									? "Mañana"
-									: "Pasado Mañana"}
-						</h2>
-						<div className="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
-							<DateSelector
-								forecastDay={"TODAY"}
-								setForecastDay={setForecastDay}
-								active={forecastDay === "TODAY"}
-							>
-								Hoy
-							</DateSelector>
-							<DateSelector
-								forecastDay={"TOMORROW"}
-								setForecastDay={setForecastDay}
-								active={forecastDay === "TOMORROW"}
-							>
-								Mañana
-							</DateSelector>
-							<DateSelector
-								forecastDay={"THIRD_DAY"}
-								setForecastDay={setForecastDay}
-								active={forecastDay === "THIRD_DAY"}
-							>
-								Pasado Mañana
-							</DateSelector>
+						<div className="mt-10">
+							<MoreCurrentData data={weatherData} currentHour={currentHour} />
 						</div>
 					</div>
 
-					<HourlyData
-						data={weatherData}
-						sliceHours={sliceHours}
-						updateSelectedHour={updateSelectedHour}
-					/>
-				</section>
+					<section className="space-y-6">
+						<div className="flex items-center justify-between">
+							<h2 className="text-2xl font-bold tracking-tight">
+								{forecastDay === "TODAY"
+									? "Hoy"
+									: forecastDay === "TOMORROW"
+										? "Mañana"
+										: "Pasado Mañana"}
+							</h2>
+							<div className="flex p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
+								<DateSelector
+									forecastDay={"TODAY"}
+									setForecastDay={setForecastDay}
+									active={forecastDay === "TODAY"}
+								>
+									Hoy
+								</DateSelector>
+								<DateSelector
+									forecastDay={"TOMORROW"}
+									setForecastDay={setForecastDay}
+									active={forecastDay === "TOMORROW"}
+								>
+									Mañana
+								</DateSelector>
+								<DateSelector
+									forecastDay={"THIRD_DAY"}
+									setForecastDay={setForecastDay}
+									active={forecastDay === "THIRD_DAY"}
+								>
+									Pasado Mañana
+								</DateSelector>
+							</div>
+						</div>
 
-				<SelectedHourData data={weatherData} selectedHour={selectedHour} />
+						<HourlyData
+							data={weatherData}
+							sliceHours={sliceHours}
+							updateSelectedHour={updateSelectedHour}
+						/>
+					</section>
+					<SelectedHourData data={weatherData} selectedHour={selectedHour} />
 				
-				<section className="w-full py-6">
-					<div className="glass rounded-3xl p-4 shadow-lg border border-white/20 dark:border-white/10">
-						<MapForecast />
-					</div>
-				</section>
-			</div>
-		</main>
-	)
-}
+					{ (CITIES.Catalunya.cities[city] || CITIES.España.cities[city]) && (
+						<section className="w-full py-6">
+							<div className="glass rounded-3xl p-4 shadow-lg border border-white/20 dark:border-white/10">
+								<MapForecast 
+									region={CITIES.Catalunya.cities[city] ? "catalonia" : "spain"} 
+								/>
+							</div>
+						</section>
+					)}
+				</div>
+			</main>
+		)
+	}
 
 function DateSelector({
 	forecastDay,
