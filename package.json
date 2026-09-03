@@ -10,12 +10,12 @@
 	},
 	"dependencies": {
 		"@aaroon/workbox-rspack-plugin": "^1.0.1",
-		"react": "19.2.4",
-		"react-dom": "19.2.4"
+		"react": "^19.2.8",
+		"react-dom": "^19.2.8"
 	},
 	"devDependencies": {
-		"@rsbuild/core": "^2.1.9",
-		"@rsbuild/plugin-react": "2.1.0",
+		"@rsbuild/core": "^2.2.3",
+		"@rsbuild/plugin-react": "^2.1.0",
 		"@tailwindcss/postcss": "4.3.3",
 		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
